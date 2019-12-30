@@ -60,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		and().authorizeRequests()
 		.antMatchers("/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg", "/**/*.html",
 				"/**/*.css", "/**/*.js")
-		.permitAll().antMatchers(SIGN_UP_URLS).permitAll().antMatchers("/api/admin/hello/**").hasRole("ADMIN").antMatchers("/api/admin/restaurant/**").hasRole("ADMIN").anyRequest().authenticated();
+		.permitAll().antMatchers(SIGN_UP_URLS).permitAll().antMatchers("/api/admin/auth/**").hasRole("ADMIN").antMatchers("/api/admin/restaurant/**").hasRole("ADMIN").anyRequest().authenticated();
 		
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}

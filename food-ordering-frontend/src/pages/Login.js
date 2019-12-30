@@ -22,9 +22,6 @@ export default function SignIn() {
     username: "",
     password: ""
   });
-
-  const [loginPoruka, setloginPoruka] = React.useState("");
-
   const [fieldErrors, setFieldErrors] = React.useState({
     username: "",
     password: ""
@@ -42,7 +39,6 @@ export default function SignIn() {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
-        //"Access-Control-Allow-Origin": "*"
       },
       body: JSON.stringify({
         username: fields.username,
@@ -57,8 +53,6 @@ export default function SignIn() {
       })
       .then(json => {
         setFieldErrors(initialFieldErrors);
-        setloginPoruka(`uspjesan login! token je: ${JSON.stringify(json)}`);
-        //ovde treba login handle
 
         dispatch({
           type: "login",
@@ -67,8 +61,9 @@ export default function SignIn() {
             username: fields.username
           }
         });
-        //nakon uspjesnog logina idi na home
-        navigate("/");
+      })
+      .then(() => {
+        navigate("/admin/");
       })
       .catch(err => {
         if (err.text) {
@@ -82,15 +77,12 @@ export default function SignIn() {
           });
         } else {
           setFieldErrors(initialFieldErrors);
-          console.log(err);
-          setloginPoruka("Cudna greska! err: " + JSON.stringify(err));
         }
       });
   };
 
   return (
     <Container component="main" maxWidth="xs">
-      <p>{loginPoruka ? loginPoruka : ""}</p>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
