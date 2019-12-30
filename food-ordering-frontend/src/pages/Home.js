@@ -1,12 +1,11 @@
 import React, { useContext } from "react";
 import { authStore } from "../store/AuthStore";
 const Home = () => {
-  const globalState = useContext(authStore);
-  console.log(globalState);
+  const authContext = useContext(authStore);
 
   return (
     <>
-      <p>{JSON.stringify(globalState)};</p>
+      <p>{JSON.stringify(authContext)};</p>
     </>
   );
 };

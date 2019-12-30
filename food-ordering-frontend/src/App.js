@@ -9,18 +9,31 @@ import Restaurants from "./pages/Restaurants";
 import CreateRestaurant from "./pages/CreateRestaurant";
 import Restaurant from "./pages/Restaurant";
 import CreateFoodArticle from "./pages/CreateFoodArticle";
+import NotFound from "./pages/NotFound";
+import { PublicRoute, ProtectedRoute } from "./Routes";
 const App = () => {
   return (
     <AuthProvider>
       <Nav />
       <Router>
-        <Home path="/" />
-        <AdminSignup path="signup" />
-        <Login path="login" />
-        <Restaurants path="restaurants" />
-        <CreateRestaurant path="restaurants/create" />
-        <Restaurant path="restaurants/:restaurantId" />
-        <CreateFoodArticle path="restaurants/:restaurantId/AddFoodArticle" />
+        <PublicRoute component={Home} path="/admin/" />
+        <PublicRoute component={AdminSignup} path="/admin/signup" />
+        <PublicRoute component={Login} path="/admin/login" />
+        <ProtectedRoute component={Restaurants} path="/admin/restaurants" />
+        <ProtectedRoute
+          component={CreateRestaurant}
+          path="/admin/restaurants/create"
+        />
+        <ProtectedRoute
+          component={Restaurant}
+          path="/admin/restaurants/:restaurantId"
+        />
+        <ProtectedRoute
+          component={CreateFoodArticle}
+          path="/admin/restaurants/:restaurantId/AddFoodArticle"
+        />
+
+        <PublicRoute default component={NotFound} />
       </Router>
     </AuthProvider>
   );

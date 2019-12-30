@@ -11,9 +11,10 @@ const Nav = () => {
 
   return (
     <nav>
-      <Link to="/">Home</Link>
-      <Link to="/login">Login</Link> <Link to="/signup">Signup</Link>{" "}
-      <Link to="/restaurants">Restaurants</Link>{" "}
+      <Link to="/admin/">Home</Link>
+      <Link to="/admin/login">Login</Link>{" "}
+      <Link to="/admin/signup">Signup</Link>{" "}
+      <Link to="/admin/restaurants">Restaurants</Link>{" "}
       <button onClick={handleLogout}>Logout</button>
     </nav>
   );

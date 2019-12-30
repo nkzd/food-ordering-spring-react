@@ -46,13 +46,13 @@ export default function ButtonAppBar(props) {
             onClick={() => {
               switch (props.pageName) {
                 case "Food Articles":
-                  navigate(`/restaurants/${props.restaurantId}/AddFoodArticle`);
+                  navigate(`/admin/restaurants/${props.restaurantId}/AddFoodArticle`);
                   break;
                 case "Restaurants":
-                  navigate("/restaurants/create");
+                  navigate("/admin/restaurants/create");
                   break;
                 default:
-                  navigate("/restaurants/create");
+                  navigate("/admin/restaurants/create");
                   break;
               }
             }}
