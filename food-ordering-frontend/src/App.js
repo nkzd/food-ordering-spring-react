@@ -7,6 +7,7 @@ import { AuthProvider } from "./store/AuthStore";
 import Nav from "./components/Nav";
 import Restaurants from "./pages/Restaurants";
 import CreateRestaurant from "./pages/CreateRestaurant";
+import EditRestaurant from "./pages/EditRestaurant";
 import Restaurant from "./pages/Restaurant";
 import CreateFoodArticle from "./pages/CreateFoodArticle";
 import NotFound from "./pages/NotFound";
@@ -27,6 +28,10 @@ const App = () => {
         <ProtectedRoute
           component={Restaurant}
           path="/admin/restaurants/:restaurantId"
+        />
+        <ProtectedRoute
+          component={EditRestaurant}
+          path="/admin/restaurants/:restaurantId/edit"
         />
         <ProtectedRoute
           component={CreateFoodArticle}
