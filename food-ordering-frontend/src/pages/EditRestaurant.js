@@ -25,6 +25,8 @@ export default function SignUp(props) {
     pictureUrl: ""
   });
 
+  const [restaurantData,setRestaurantData] = useState({});
+
   useEffect(() => {
     fetch(`http://localhost:8080/api/admin/restaurant/${props.restaurantId}`, {
       method: "GET",
@@ -41,7 +43,7 @@ export default function SignUp(props) {
       })
       .then(json => {
         console.log(json);
-        //setData(json);
+        setRestaurantData(json);
       })
       .catch(err => {
         if (err.text) {

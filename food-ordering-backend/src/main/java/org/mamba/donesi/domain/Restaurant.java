@@ -39,7 +39,7 @@ public class Restaurant {
 	
 	private String description;
 	
-	private String urlSlike;
+	private String pictureUrl;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "adminUser_id", updatable = false, nullable = false)
@@ -105,12 +105,12 @@ public class Restaurant {
 		this.description = description;
 	}
 
-	public String getUrlSlike() {
-		return urlSlike;
+	public String getPictureUrl() {
+		return pictureUrl;
 	}
 
-	public void setUrlSlike(String urlSlike) {
-		this.urlSlike = urlSlike;
+	public void setPictureUrl(String pictureUrl) {
+		this.pictureUrl = pictureUrl;
 	}
 
 	public Date getCreatedAt() {
