@@ -15,9 +15,8 @@ import { PublicRoute, ProtectedRoute } from "./Routes";
 const App = () => {
   return (
     <AuthProvider>
-      <Nav />
       <Router>
-        <PublicRoute component={Home} path="/admin/" />
+        <PublicRoute component={Restaurants} path="/admin/" />
         <PublicRoute component={AdminSignup} path="/admin/signup" />
         <PublicRoute component={Login} path="/admin/login" />
         <ProtectedRoute component={Restaurants} path="/admin/restaurants" />

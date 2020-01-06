@@ -4,15 +4,16 @@ import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
+import Link from "@material-ui/core/Link";
 import RestaurantIcon from "@material-ui/icons/Restaurant";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Copyright from "../components/Copyright";
-import { navigate } from "@reach/router";
+import { navigate, Link as RouterLink } from "@reach/router";
 import {authStore} from "../store/AuthStore"
-export default function SignUp() {
+import ServerErrorMessage from "../components/ServerErrorMessage";
+import CircularProgress from '@material-ui/core/CircularProgress';
+const CreateRestaurant = () => {
   const classes = useStyles();
   const authContext = useContext(authStore);
 
@@ -23,22 +24,16 @@ export default function SignUp() {
     description: "",
     pictureUrl: ""
   }
-
-  const initialFieldsErrors = {
-    name: "",
-    email: "",
-    address:"",
-    description: "",
-    pictureUrl: ""
-  }
+  const [serverError, setServerError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [restaurantFields, setRestaurantFields] = useState(initialFields);
 
-  const [fieldErrors, setFieldErrors] = useState(initialFieldsErrors);
+  const [fieldErrors, setFieldErrors] = useState(initialFields);
 
   const handleCreate = event => {
     event.preventDefault();
-  
+    setLoading(true);
     fetch("http://localhost:8080/api/admin/restaurant", {
       method: "POST",
       headers: {
@@ -57,12 +52,7 @@ export default function SignUp() {
         if (!response.ok) {
           throw response;
         }
-        return response.json(); //we only get here if there is no error
-      })
-      .then(json => {
-        setFieldErrors(initialFields)
-      })
-      .then(() => {
+        setFieldErrors(initialFields);
         navigate("/admin/restaurants/");
       })
       .catch(err => {
@@ -70,14 +60,16 @@ export default function SignUp() {
           err.text().then(errorMessage => {
             const errObj = JSON.parse(errorMessage);
             console.log(errObj);
-
+            setLoading(false);
             setFieldErrors({
-              ...initialFieldsErrors,
+              ...initialFields,
               ...errObj
             });
           });
         } else {
+          setLoading(false);
           setFieldErrors(initialFields);
+          setServerError(true);
         }
       });
   };
@@ -87,6 +79,7 @@ export default function SignUp() {
   
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <RestaurantIcon />
@@ -95,6 +88,8 @@ export default function SignUp() {
           Add new restaurant
           
         </Typography>
+        <ServerErrorMessage error={serverError}/>
+        {loading && <CircularProgress />}
         <form className={classes.form} validate="true" onSubmit={handleCreate}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
@@ -122,6 +117,7 @@ export default function SignUp() {
                 fullWidth
                 label="Email address"
                 autoComplete="email"
+                type="email"
                 value={restaurantFields.email}
                 onChange={event=>{
                   setRestaurantFields({...restaurantFields, email: event.target.value});
@@ -188,11 +184,15 @@ export default function SignUp() {
           >
             Submit
           </Button>
+          <Grid container>
+            <Grid item>
+              <Link component={RouterLink} to="/admin/restaurants" variant="body2">
+                {"Back to home"}
+              </Link>
+            </Grid>
+          </Grid>
         </form>
       </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }
@@ -216,3 +216,5 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2)
   }
 }));
+
+export default CreateRestaurant;

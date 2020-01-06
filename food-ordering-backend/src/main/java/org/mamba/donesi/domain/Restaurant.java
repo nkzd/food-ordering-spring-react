@@ -30,8 +30,8 @@ public class Restaurant {
 	private Long id;
 	@NotBlank(message = "Name is required")
 	private String name;
-	@Email(message = "Email ")
-	@NotBlank(message = "Email is required")
+	@Email(message = "Valid email address is required")
+	@NotBlank(message = "Email address is required")
 	@Column(unique = true)
 	private String email;
 	@NotBlank

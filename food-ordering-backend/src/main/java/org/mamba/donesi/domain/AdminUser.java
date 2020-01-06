@@ -34,8 +34,8 @@ public class AdminUser implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Email(message = "Username needs to be an email")
-	@NotBlank(message = "Username is required")
+	@Email(message = "Valid email address is required")
+	@NotBlank(message = "Email address is required")
 	@Column(unique = true)
 	private String username;
 

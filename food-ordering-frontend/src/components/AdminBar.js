@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -13,6 +13,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { authStore } from "../store/AuthStore";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -29,11 +30,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-//props za account name
-
-export default function ButtonAppBar(props) {
+const AdminBar = (props) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const authContext = useContext(authStore);
+
+  const handleLogout = () => {
+    authContext.dispatch({ type: "logout" });
+    navigate("/admin/login");
+  };
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -119,7 +125,7 @@ export default function ButtonAppBar(props) {
           <div className={classes.left}></div>
 
           <Typography variant="subtitle1" className={classes.right}>
-            Account name
+            {authContext.state.username}
           </Typography>
 
           <Button
@@ -127,6 +133,7 @@ export default function ButtonAppBar(props) {
             color="secondary"
             className={classes.right}
             startIcon={<ExitToAppIcon />}
+            onClick={handleLogout}
           >
             Logout
           </Button>
@@ -135,3 +142,4 @@ export default function ButtonAppBar(props) {
     </div>
   );
 }
+export default AdminBar;

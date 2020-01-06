@@ -14,14 +14,19 @@ import Copyright from "../components/Copyright";
 import { authStore } from "../store/AuthStore";
 import { navigate } from "@reach/router";
 import foodImage from "../images/food.jpeg";
-export default function Album() {
+import ServerErrorMessage from "../components/ServerErrorMessage";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import RestaurantDeleteDialog from "../components/RestaurantDeleteDialog";
+const Restaurants = () => {
   const authContext = useContext(authStore);
-
   const classes = useStyles();
-
+  const [refreshOnDelete, setRefreshOnDelete] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({ restaurants: [] });
+  const [serverError, setServerError] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     fetch("http://localhost:8080/api/admin/restaurant/all", {
       method: "GET",
       headers: {
@@ -36,20 +41,26 @@ export default function Album() {
         return response.json(); //we only get here if there is no error
       })
       .then(json => {
-        console.log(json);
+        setLoading(false);
+        setServerError(false);
         setData({ restaurants: json });
       })
       .catch(err => {
         if (err.text) {
           err.text().then(errorMessage => {
+            setLoading(false);
             const errObj = JSON.parse(errorMessage);
             console.log(errObj);
+            authContext.dispatch({type: "logout"});
+            navigate("/admin/login/");
           });
         } else {
+          setLoading(false);
+          setServerError(true);
           console.log(err);
         }
       });
-  }, []);
+  }, [refreshOnDelete]);
 
   return (
     <React.Fragment>
@@ -58,15 +69,18 @@ export default function Album() {
       <main>
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
+          <ServerErrorMessage error={serverError}/>
+          <Grid container justify = "center">
+            {loading && <CircularProgress />}
+          </Grid>
           <Grid container spacing={4}>
             {data.restaurants.map(restaurant => (
               <Grid item key={restaurant.id} xs={12} sm={6} md={4}>
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
-                    //restaurant.urlSlike
                     image={
-                      restaurant.urlSlike ? restaurant.urlSlike : foodImage
+                      restaurant.pictureUrl ? restaurant.pictureUrl : foodImage
                     }
                     title="Restaurant image"
                   />
@@ -82,7 +96,7 @@ export default function Album() {
                       color="primary"
                       onClick={() => {
                         navigate(
-                          `http://localhost:8080/api/admin/restaurant/${restaurant.id}`
+                          `/admin/restaurants/${restaurant.id}`
                         );
                       }}
                     >
@@ -93,12 +107,20 @@ export default function Album() {
                       color="primary"
                       onClick={() => {
                         navigate(
-                          `http://localhost:8080/api/admin/restaurant/${restaurant.id}/edit`
+                          `/admin/restaurants/${restaurant.id}/edit`
                         );
                       }}
                     >
                       Edit
                     </Button>
+                    <RestaurantDeleteDialog deleteId={restaurant.id} refresh=
+                    {
+                      {
+                        refreshOnDelete,
+                        setRefreshOnDelete
+                      }
+                    }
+                    />
                   </CardActions>
                 </Card>
               </Grid>
@@ -150,5 +172,9 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1
+  },
+  loadingSpinner: {
+      //textAlign: "center",
   }
 }));
+export default Restaurants;
