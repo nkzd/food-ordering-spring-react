@@ -35,9 +35,6 @@ const AuthProvider = ({ children }) => {
           username: action.payload.username,
           isAuthenticated: true
         };
-
-      case "checkLogin":
-        return "hehe";
       case "logout":
         localStorage.clear();
         return {

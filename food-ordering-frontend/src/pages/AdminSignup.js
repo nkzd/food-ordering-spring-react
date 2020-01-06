@@ -1,37 +1,32 @@
-import React from "react";
+import React, {useState} from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Link as RouterLink, navigate } from "@reach/router";
+import ServerErrorMessage from "../components/ServerErrorMessage";
 
-export default function SignUp() {
+const SignUp = () => {
   const classes = useStyles();
 
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [serverError, setServerError] = useState(false);
 
-  const [fields, setFields] = React.useState({
-    username: "",
-    password: "",
-    confirmPassword: ""
-  });
-  const initialFieldErrors = {
+  
+  const initialFields = {
     username: "",
     password: "",
     confirmPassword: ""
   };
-  const [fieldErrors, setFieldErrors] = React.useState(initialFieldErrors);
+  const [fields, setFields] = useState(initialFields);
+  const [fieldErrors, setFieldErrors] = useState(initialFields);
 
   const handleRegister = () => {
-    setIsLoading(true);
-
     fetch("http://localhost:8080/api/admin/users/register", {
       method: "POST",
       headers: {
@@ -47,10 +42,7 @@ export default function SignUp() {
         if (!response.ok) {
           throw response;
         }
-        return response.json(); //we only get here if there is no error
-      })
-      .then(json => {
-        setFieldErrors(initialFieldErrors);
+        setFieldErrors(initialFields);
         navigate("/admin/login");
       })
       .catch(err => {
@@ -58,19 +50,19 @@ export default function SignUp() {
           err.text().then(errorMessage => {
             const errObj = JSON.parse(errorMessage);
 
-            setFieldErrors({ ...initialFieldErrors, ...errObj });
+            setFieldErrors({ ...initialFields, ...errObj });
           });
         } else {
-          setFieldErrors(initialFieldErrors);
+          setServerError(true)
+          setFieldErrors(initialFields);
         }
       });
-    setIsLoading(false);
   };
 
   return (
     <Container component="main" maxWidth="xs">
-      <p>{isLoading ? "Loading..." : ""}</p>
       <CssBaseline />
+      
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
@@ -78,14 +70,16 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
+        <ServerErrorMessage error={serverError}/>
         <form
           className={classes.form}
-          //noValidate
+          validate="true"
         >
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
+                required
                 fullWidth
                 id="email"
                 label="Email Address"
@@ -103,6 +97,7 @@ export default function SignUp() {
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
+                required
                 fullWidth
                 name="password"
                 label="Password"
@@ -121,6 +116,7 @@ export default function SignUp() {
               <TextField
                 variant="outlined"
                 fullWidth
+                required
                 name="confirmPassword"
                 label="Confirm Password"
                 type="password"
@@ -145,30 +141,14 @@ export default function SignUp() {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link component={RouterLink} to="/login" variant="body2">
+              <Link component={RouterLink} to="/admin/login" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>
           </Grid>
         </form>
       </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
     </Container>
-  );
-}
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="#">
-        Aljosa Vukotic
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
   );
 }
 
@@ -191,3 +171,4 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2)
   }
 }));
+export default SignUp;

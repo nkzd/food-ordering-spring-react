@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -9,12 +9,13 @@ import RestaurantIcon from "@material-ui/icons/Restaurant";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { authStore } from "../store/AuthStore";
 import { navigate, Link as RouterLink } from "@reach/router";
-import {authStore} from "../store/AuthStore"
 import ServerErrorMessage from "../components/ServerErrorMessage";
 import CircularProgress from '@material-ui/core/CircularProgress';
-const CreateRestaurant = () => {
+const EditRestaurant = (props) => {
   const classes = useStyles();
+
   const authContext = useContext(authStore);
 
   const initialFields = {
@@ -31,7 +32,48 @@ const CreateRestaurant = () => {
 
   const [fieldErrors, setFieldErrors] = useState(initialFields);
 
-  const handleCreate = event => {
+  useEffect(() => {
+    setLoading(true);
+    fetch(`http://localhost:8080/api/admin/restaurant/${props.restaurantId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authContext.state.token
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw response;
+        }
+        return response.json();
+      })
+      .then(json => {
+        //you should not assign null values to fields.
+        Object.keys(json).forEach((key) => {
+          if(json[key] === null)
+          json[key]=""; 
+        });
+        setLoading(false);
+        setRestaurantFields(json);
+      })
+      .catch(err => {
+        if (err.text) {
+          err.text().then(errorMessage => {
+            const errObj = JSON.parse(errorMessage);
+            console.log(errObj);
+            setLoading(false);
+            authContext.dispatch({type: "logout"});
+            navigate("/admin/login/");
+          });
+        } else {
+          setLoading(false);
+          setServerError(true);
+          console.log(err);
+        }
+      });
+  }, []);
+
+  const handleEdit = event => {
     event.preventDefault();
     setLoading(true);
     fetch("http://localhost:8080/api/admin/restaurant", {
@@ -41,6 +83,7 @@ const CreateRestaurant = () => {
         "Authorization": authContext.state.token
       },
       body: JSON.stringify({
+        id: props.restaurantId,
         name: restaurantFields.name,
         email: restaurantFields.email,
         address: restaurantFields.address,
@@ -59,7 +102,6 @@ const CreateRestaurant = () => {
         if (err.text) {
           err.text().then(errorMessage => {
             const errObj = JSON.parse(errorMessage);
-            console.log(errObj);
             setLoading(false);
             setFieldErrors({
               ...initialFields,
@@ -74,9 +116,7 @@ const CreateRestaurant = () => {
       });
   };
 
-
   return (
-  
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       
@@ -85,12 +125,11 @@ const CreateRestaurant = () => {
           <RestaurantIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Add new restaurant
-          
+          Edit restaurant
         </Typography>
         <ServerErrorMessage error={serverError}/>
         {loading && <CircularProgress />}
-        <form className={classes.form} validate="true" onSubmit={handleCreate}>
+        <form className={classes.form} validate="true" onSubmit={handleEdit}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <TextField
@@ -101,8 +140,11 @@ const CreateRestaurant = () => {
                 fullWidth
                 label="Restaurant Name"
                 value={restaurantFields.name}
-                onChange={event=>{
-                  setRestaurantFields({...restaurantFields, name: event.target.value});
+                onChange={event => {
+                  setRestaurantFields({
+                    ...restaurantFields,
+                    username: event.target.value
+                  });
                 }}
                 helperText={fieldErrors.name}
                 error={!!fieldErrors.name}
@@ -119,8 +161,11 @@ const CreateRestaurant = () => {
                 autoComplete="email"
                 type="email"
                 value={restaurantFields.email}
-                onChange={event=>{
-                  setRestaurantFields({...restaurantFields, email: event.target.value});
+                onChange={event => {
+                  setRestaurantFields({
+                    ...restaurantFields,
+                    email: event.target.value
+                  });
                 }}
                 helperText={fieldErrors.email}
                 error={!!fieldErrors.email}
@@ -152,8 +197,11 @@ const CreateRestaurant = () => {
                 multiline
                 rows="4"
                 value={restaurantFields.description}
-                onChange={event=>{
-                  setRestaurantFields({...restaurantFields, description: event.target.value});
+                onChange={event => {
+                  setRestaurantFields({
+                    ...restaurantFields,
+                    description: event.target.value
+                  });
                 }}
                 helperText={fieldErrors.description}
                 error={!!fieldErrors.description}
@@ -167,8 +215,11 @@ const CreateRestaurant = () => {
                 fullWidth
                 label="Picture URL"
                 value={restaurantFields.pictureUrl}
-                onChange={event=>{
-                  setRestaurantFields({...restaurantFields, pictureUrl: event.target.value});
+                onChange={event => {
+                  setRestaurantFields({
+                    ...restaurantFields,
+                    pictureUrl: event.target.value
+                  });
                 }}
                 helperText={fieldErrors.pictureUrl}
                 error={!!fieldErrors.pictureUrl}
@@ -210,11 +261,11 @@ const useStyles = makeStyles(theme => ({
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(5)
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
   }
 }));
 
-export default CreateRestaurant;
+export default EditRestaurant;

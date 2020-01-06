@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -11,8 +11,56 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import AdminBar from "../components/AdminBar";
 import Copyright from "../components/Copyright";
-export default function Album() {
+import { authStore } from "../store/AuthStore";
+import { navigate } from "@reach/router";
+import foodImage from "../images/food.jpeg";
+import ServerErrorMessage from "../components/ServerErrorMessage";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import RestaurantDeleteDialog from "../components/RestaurantDeleteDialog";
+const Restaurants = () => {
+  const authContext = useContext(authStore);
   const classes = useStyles();
+  const [refreshOnDelete, setRefreshOnDelete] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState({ restaurants: [] });
+  const [serverError, setServerError] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch("http://localhost:8080/api/admin/restaurant/all", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authContext.state.token
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw response;
+        }
+        return response.json(); //we only get here if there is no error
+      })
+      .then(json => {
+        setLoading(false);
+        setServerError(false);
+        setData({ restaurants: json });
+      })
+      .catch(err => {
+        if (err.text) {
+          err.text().then(errorMessage => {
+            setLoading(false);
+            const errObj = JSON.parse(errorMessage);
+            console.log(errObj);
+            authContext.dispatch({type: "logout"});
+            navigate("/admin/login/");
+          });
+        } else {
+          setLoading(false);
+          setServerError(true);
+          console.log(err);
+        }
+      });
+  }, [refreshOnDelete]);
 
   return (
     <React.Fragment>
@@ -21,31 +69,58 @@ export default function Album() {
       <main>
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
+          <ServerErrorMessage error={serverError}/>
+          <Grid container justify = "center">
+            {loading && <CircularProgress />}
+          </Grid>
           <Grid container spacing={4}>
-            {cards.map(card => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
+            {data.restaurants.map(restaurant => (
+              <Grid item key={restaurant.id} xs={12} sm={6} md={4}>
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
-                    image="https://source.unsplash.com/random"
-                    title="Image title"
+                    image={
+                      restaurant.pictureUrl ? restaurant.pictureUrl : foodImage
+                    }
+                    title="Restaurant image"
                   />
                   <CardContent className={classes.cardContent}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Restaurant Name
+                      {restaurant.name}
                     </Typography>
-                    <Typography>
-                      This is a media card. You can use this section to describe
-                      the content.
-                    </Typography>
+                    <Typography>{restaurant.description}</Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="medium" color="primary">
+                    <Button
+                      size="medium"
+                      color="primary"
+                      onClick={() => {
+                        navigate(
+                          `/admin/restaurants/${restaurant.id}`
+                        );
+                      }}
+                    >
                       View
                     </Button>
-                    <Button size="medium" color="primary">
+                    <Button
+                      size="medium"
+                      color="primary"
+                      onClick={() => {
+                        navigate(
+                          `/admin/restaurants/${restaurant.id}/edit`
+                        );
+                      }}
+                    >
                       Edit
                     </Button>
+                    <RestaurantDeleteDialog deleteId={restaurant.id} refresh=
+                    {
+                      {
+                        refreshOnDelete,
+                        setRefreshOnDelete
+                      }
+                    }
+                    />
                   </CardActions>
                 </Card>
               </Grid>
@@ -97,7 +172,9 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1
+  },
+  loadingSpinner: {
+      //textAlign: "center",
   }
 }));
-
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+export default Restaurants;

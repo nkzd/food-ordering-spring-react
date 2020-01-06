@@ -7,6 +7,7 @@ import { AuthProvider } from "./store/AuthStore";
 import Nav from "./components/Nav";
 import Restaurants from "./pages/Restaurants";
 import CreateRestaurant from "./pages/CreateRestaurant";
+import EditRestaurant from "./pages/EditRestaurant";
 import Restaurant from "./pages/Restaurant";
 import CreateFoodArticle from "./pages/CreateFoodArticle";
 import NotFound from "./pages/NotFound";
@@ -14,9 +15,8 @@ import { PublicRoute, ProtectedRoute } from "./Routes";
 const App = () => {
   return (
     <AuthProvider>
-      <Nav />
       <Router>
-        <PublicRoute component={Home} path="/admin/" />
+        <PublicRoute component={Restaurants} path="/admin/" />
         <PublicRoute component={AdminSignup} path="/admin/signup" />
         <PublicRoute component={Login} path="/admin/login" />
         <ProtectedRoute component={Restaurants} path="/admin/restaurants" />
@@ -27,6 +27,10 @@ const App = () => {
         <ProtectedRoute
           component={Restaurant}
           path="/admin/restaurants/:restaurantId"
+        />
+        <ProtectedRoute
+          component={EditRestaurant}
+          path="/admin/restaurants/:restaurantId/edit"
         />
         <ProtectedRoute
           component={CreateFoodArticle}
