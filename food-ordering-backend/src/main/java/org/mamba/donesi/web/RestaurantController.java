@@ -11,6 +11,7 @@ import org.mamba.donesi.services.CategoryService;
 import org.mamba.donesi.services.FoodArticleService;
 import org.mamba.donesi.services.MapValidationErrorService;
 import org.mamba.donesi.services.RestaurantService;
+import org.mamba.donesi.validator.FoodArticleValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,9 @@ public class RestaurantController {
 
 	@Autowired
 	private MapValidationErrorService mapValidationErrorService;
+	
+	@Autowired
+	private FoodArticleValidator foodArticleValidator;
 
 	@PostMapping("")
 	public ResponseEntity<?> createNewRestaurant(@Valid @RequestBody Restaurant restaurant, BindingResult result,
@@ -126,14 +130,21 @@ public class RestaurantController {
 	}
 
 	@PostMapping("/{restaurantId}/foodarticle")
-	public ResponseEntity<?> addFoodArticleToRestaurant(@PathVariable String restaurantId,
+	public ResponseEntity<?> addOrUpdateFoodArticleToRestaurant(@PathVariable String restaurantId,
 			@Valid @RequestBody FoodArticle foodArticle, BindingResult result, Principal principal) {
 		
 		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
 		if (errorMap != null)
 			return errorMap;	
 		
-		FoodArticle newFoodArticle = restaurantService.addFoodArticleToRestaurant(restaurantId, foodArticle,
+		//Provjera nulla
+		foodArticleValidator.validate(foodArticle, result);
+		
+		errorMap = mapValidationErrorService.MapValidationService(result);
+		if (errorMap != null)
+			return errorMap;
+		
+		FoodArticle newFoodArticle = restaurantService.saveOrUpdateFoodArticleToRestaurant(restaurantId, foodArticle,
 				principal.getName());
 
 		return new ResponseEntity<FoodArticle>(newFoodArticle, HttpStatus.OK);

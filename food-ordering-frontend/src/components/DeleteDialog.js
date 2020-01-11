@@ -7,7 +7,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { authStore } from "../store/AuthStore";
 import { navigate } from "@reach/router";
-const RestaurantDeleteDialog = ({deleteId, refresh}) => {
+const RestaurantDeleteDialog = ({deleteId, refresh, type, restaurantId}) => {
   const [open, setOpen] = React.useState(false);
   
   const authContext = useContext(authStore);
@@ -20,7 +20,18 @@ const RestaurantDeleteDialog = ({deleteId, refresh}) => {
   };
 
   const handleDelete = () => {
-    fetch(`http://localhost:8080/api/admin/restaurant/${deleteId}`, {
+    let url="";
+    switch (type) {
+      case "restaurant":
+        url = `http://localhost:8080/api/admin/restaurant/${deleteId}`;
+        break;
+      case "foodArticle":
+        url = `http://localhost:8080/api/admin/restaurant/${restaurantId}/foodarticle/${deleteId}`;
+        break;
+      default:
+        throw new Error("no case");
+    }
+    fetch(url, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -60,7 +71,7 @@ const RestaurantDeleteDialog = ({deleteId, refresh}) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Delete restaurant?"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Delete "+((type==="restaurant") ? "restaurant" : "food article")+"?"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
            {"This action can't be undone"}
@@ -70,7 +81,7 @@ const RestaurantDeleteDialog = ({deleteId, refresh}) => {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDelete} color="primary">
+          <Button onClick={handleDelete} color="secondary">
             Delete
           </Button>
         </DialogActions>

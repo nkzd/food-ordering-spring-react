@@ -42,20 +42,21 @@ public class FoodArticle {
     @JsonIgnore
     private Restaurant restaurant;
 	
-	//ovde mozda dodati nullable false
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="category_id",nullable=false)
 	@JsonIgnore
 	private Category category;
 	
+	//Using a custom validator instead
+	//@NotNull
 	@Transient
-	@NotNull
-	@Min(1)
 	private Long categoryIdentifier;
 
+	
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	@Column(updatable = false)
 	private Date createdAt;
+	
 	
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date updatedAt;
