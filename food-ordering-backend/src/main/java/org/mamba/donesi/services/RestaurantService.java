@@ -70,9 +70,7 @@ public class RestaurantService {
 			AdminUser adminUser = adminUserRepository.findByUsername(username);
 			restaurant.setAdminUser(adminUser);
 
-			// ovo vraca NE perzistovan objekat? Cudno.
 			return restaurantRepository.save(restaurant);
-			// zbog flusha, created_at je na null
 		} catch (Exception e) {
 			throw new RestaurantIdException("Restaurant with this email already exists");
 		}
@@ -96,7 +94,20 @@ public class RestaurantService {
 
 	}
 
-	public FoodArticle addFoodArticleToRestaurant(String restaurantId, FoodArticle foodArticle, String username) {
+	public FoodArticle saveOrUpdateFoodArticleToRestaurant(String restaurantId, FoodArticle foodArticle, String username) {
+		
+		if (foodArticle.getId() != null) {
+			Optional<FoodArticle> existingFoodArticle = foodArticleRepository.findById(foodArticle.getId());
+			if (!existingFoodArticle.isPresent()) {
+				throw new FoodArticleIdException("Food Article ID " + foodArticle.getId() + " does not exist");
+			}
+
+			if (!existingFoodArticle.get().getRestaurant().getAdminUser().getUsername().equals(username)) {
+				throw new RestaurantNotFoundException("Food Article not found in your account");
+			}
+
+		}
+		
 		Restaurant restaurant = findRestaurantById(restaurantId, username);
 
 		foodArticle.setRestaurant(restaurant);
@@ -108,6 +119,7 @@ public class RestaurantService {
 		try {
 			return foodArticleRepository.save(foodArticle);
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new FoodArticleIdException("Food article with this id already exists");
 		}
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useContext,useEffect} from "react";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -9,34 +9,171 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import AdminBar from "../components/AdminBar";
-import Copyright from "../components/Copyright";
-export default function Album({ restaurantId }) {
+import { authStore } from "../store/AuthStore";
+import ServerErrorMessage from "../components/ServerErrorMessage";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { navigate } from "@reach/router";
+import DeleteDialog from "../components/DeleteDialog";
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
+const Restaurant = ({ restaurantId }) => {
   const classes = useStyles();
+  const authContext = useContext(authStore);
+  const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState(undefined);
+  const [foodArticles, setFoodArticles] = useState(undefined);
+  const [serverError, setServerError] = useState(false);
+  const [categoryId, setCategoryId] = useState("all");
+  const [refreshCategoryOnAdd, setRefreshCategoryOnAdd]=useState(false);
+  const [refreshOnDelete, setRefreshOnDelete] = useState(false);
+
+  //we load categories only once at first (default = all)
+  useEffect(() => {
+    fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/category/all`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authContext.state.token
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw response;
+        }
+        return response.json(); 
+      })
+      .then(json => {
+        setServerError(false);
+        setCategories(json);
+      })
+      .catch(err => {
+        if (err.text) {
+          err.text().then(errorMessage => {
+            const errObj = JSON.parse(errorMessage);
+            console.log(errObj);
+            authContext.dispatch({type: "logout"});
+            navigate("/admin/login/");
+          });
+        } else {
+          setServerError(true);
+        }
+      });
+
+  }, [refreshCategoryOnAdd]);
+//this hook will fetch data each time category changes
+useEffect(() => {
+    setLoading(true);
+    fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/category/${categoryId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authContext.state.token
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw response;
+        }
+        return response.json(); 
+      })
+      .then(json => {
+        if(categoryId==="all")
+        {
+          let allArticles = [];
+          json.forEach(category => {
+            allArticles.push(...category.foodArticles);
+          });
+          setFoodArticles(allArticles);
+        }else{
+          setFoodArticles(json.foodArticles);
+        }
+        setLoading(false);
+        setServerError(false);
+      })
+      .catch(err => {
+        if (err.text) {
+          setLoading(false);
+          authContext.dispatch({type: "logout"});
+          navigate("/admin/login/");
+        } else {
+          setLoading(false);
+          setServerError(true);
+        }
+      });
+  
+}, [categoryId,refreshOnDelete]);
 
   return (
     <React.Fragment>
       <CssBaseline />
-      <AdminBar pageName="Food Articles" restaurantId={restaurantId} />
+      <AdminBar pageName="Food Articles" restaurantId={restaurantId} refresh={{refreshCategoryOnAdd, setRefreshCategoryOnAdd}}/>
+
       <main>
+        
         <Container className={classes.cardGrid} maxWidth="md">
-          {/* End hero unit */}
+        <Grid container>
+          <ServerErrorMessage error={serverError}/>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="demo-simple-select-autowidth-label">Category</InputLabel>
+            <Select
+              labelId="demo-simple-select-autowidth-label"
+              id="demo-simple-select-autowidth"
+              value={categoryId}
+              onChange={(event)=>{setCategoryId(event.target.value)}}
+              autoWidth
+            >
+              <MenuItem key="all" value="all">All</MenuItem>
+              {
+                
+                (Array.isArray(categories)) && categories.map(catItem=>{
+                return <MenuItem key={catItem.id} value={catItem.id}>{catItem.name}</MenuItem>
+                })
+              } 
+            </Select> 
+          </FormControl>
+          </Grid>
+          
+          <Grid container justify = "center">
+            {loading && <CircularProgress />}
+          </Grid>
           <Grid container spacing={4}>
-            {cards.map(card => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
+            {(Array.isArray(foodArticles)) && foodArticles.map(foodArticle => (
+              <Grid item key={foodArticle.id} xs={12} sm={6} md={4}>
                 <Card className={classes.card}>
                   <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      Food Article
+                    <Typography gutterBottom variant="h5">
+                      {foodArticle.name}
+                    </Typography>
+                    <Typography variant="h6">
+                    {`${foodArticle.price}€`}
                     </Typography>
                     <Typography>
-                      This is a media card. You can use this section to describe
-                      the content.
+                      {foodArticle.description}
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="medium" color="primary">
+                    <Button size="medium" color="primary"
+                    onClick={() => {
+                      navigate(
+                        `/admin/restaurants/${restaurantId}/${foodArticle.id}/edit`
+                      );
+                    }}
+                    >
                       Edit
                     </Button>
+                    <DeleteDialog deleteId={foodArticle.id} refresh=
+                    {
+                      {
+                        refreshOnDelete,
+                        setRefreshOnDelete
+                      }
+                    }
+                    type="foodArticle"
+                    restaurantId={restaurantId}
+                    />
                   </CardActions>
                 </Card>
               </Grid>
@@ -44,11 +181,6 @@ export default function Album({ restaurantId }) {
           </Grid>
         </Container>
       </main>
-      {/* Footer */}
-      <footer className={classes.footer}>
-        <Copyright />
-      </footer>
-      {/* End footer */}
     </React.Fragment>
   );
 }
@@ -88,7 +220,11 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1
-  }
+  },
+  formControl: {
+    margin: theme.spacing(3),
+    minWidth: 120,
+  },
 }));
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+export default Restaurant;

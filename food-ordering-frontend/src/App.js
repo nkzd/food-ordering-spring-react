@@ -10,6 +10,7 @@ import CreateRestaurant from "./pages/CreateRestaurant";
 import EditRestaurant from "./pages/EditRestaurant";
 import Restaurant from "./pages/Restaurant";
 import CreateFoodArticle from "./pages/CreateFoodArticle";
+import EditFoodArticle from "./pages/EditFoodArticle";
 import NotFound from "./pages/NotFound";
 import { PublicRoute, ProtectedRoute } from "./Routes";
 const App = () => {
@@ -35,6 +36,10 @@ const App = () => {
         <ProtectedRoute
           component={CreateFoodArticle}
           path="/admin/restaurants/:restaurantId/AddFoodArticle"
+        />
+        <ProtectedRoute
+          component={EditFoodArticle}
+          path="/admin/restaurants/:restaurantId/:foodArticleId/edit"
         />
 
         <PublicRoute default component={NotFound} />

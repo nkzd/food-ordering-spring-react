@@ -10,13 +10,12 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import AdminBar from "../components/AdminBar";
-import Copyright from "../components/Copyright";
 import { authStore } from "../store/AuthStore";
 import { navigate } from "@reach/router";
 import foodImage from "../images/food.jpeg";
 import ServerErrorMessage from "../components/ServerErrorMessage";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import RestaurantDeleteDialog from "../components/RestaurantDeleteDialog";
+import DeleteDialog from "../components/DeleteDialog";
 const Restaurants = () => {
   const authContext = useContext(authStore);
   const classes = useStyles();
@@ -113,13 +112,14 @@ const Restaurants = () => {
                     >
                       Edit
                     </Button>
-                    <RestaurantDeleteDialog deleteId={restaurant.id} refresh=
+                    <DeleteDialog deleteId={restaurant.id} refresh=
                     {
                       {
                         refreshOnDelete,
                         setRefreshOnDelete
                       }
                     }
+                    type="restaurant"
                     />
                   </CardActions>
                 </Card>
@@ -128,11 +128,6 @@ const Restaurants = () => {
           </Grid>
         </Container>
       </main>
-      {/* Footer */}
-      <footer className={classes.footer}>
-        <Copyright />
-      </footer>
-      {/* End footer */}
     </React.Fragment>
   );
 }
