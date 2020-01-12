@@ -37,7 +37,7 @@ const Restaurants = () => {
         if (!response.ok) {
           throw response;
         }
-        return response.json(); //we only get here if there is no error
+        return response.json(); 
       })
       .then(json => {
         setLoading(false);
@@ -46,17 +46,12 @@ const Restaurants = () => {
       })
       .catch(err => {
         if (err.text) {
-          err.text().then(errorMessage => {
-            setLoading(false);
-            const errObj = JSON.parse(errorMessage);
-            console.log(errObj);
-            authContext.dispatch({type: "logout"});
-            navigate("/admin/login/");
-          });
+          setLoading(false);
+          authContext.dispatch({type: "logout"});
+          navigate("/admin/login/");
         } else {
           setLoading(false);
           setServerError(true);
-          console.log(err);
         }
       });
   }, [refreshOnDelete]);
@@ -67,11 +62,15 @@ const Restaurants = () => {
       <AdminBar pageName="Restaurants" />
       <main>
         <Container className={classes.cardGrid} maxWidth="md">
-          {/* End hero unit */}
           <ServerErrorMessage error={serverError}/>
           <Grid container justify = "center">
             {loading && <CircularProgress />}
           </Grid>
+          { data.restaurants.length ==0 &&
+          <Grid container justify = "center">
+             <Typography>You have no restaurants in your account.</Typography>
+          </Grid>
+          }
           <Grid container spacing={4}>
             {data.restaurants.map(restaurant => (
               <Grid item key={restaurant.id} xs={12} sm={6} md={4}>

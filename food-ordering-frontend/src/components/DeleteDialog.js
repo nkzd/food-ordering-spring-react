@@ -6,7 +6,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { authStore } from "../store/AuthStore";
-import { navigate } from "@reach/router";
 const RestaurantDeleteDialog = ({deleteId, refresh, type, restaurantId}) => {
   const [open, setOpen] = React.useState(false);
   
@@ -46,17 +45,7 @@ const RestaurantDeleteDialog = ({deleteId, refresh, type, restaurantId}) => {
           handleClose();
         })
         .catch(err => {
-          if (err.text) {
-            err.text().then(errorMessage => {
-              const errObj = JSON.parse(errorMessage);
-              console.log(errObj);
-              
-              handleClose();
-            });
-          } else {
-              
-            handleClose();
-          }
+          handleClose();
         });
   }
 

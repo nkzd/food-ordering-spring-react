@@ -59,7 +59,6 @@ const CreateRestaurant = () => {
         if (err.text) {
           err.text().then(errorMessage => {
             const errObj = JSON.parse(errorMessage);
-            console.log(errObj);
             setLoading(false);
             setFieldErrors({
               ...initialFields,

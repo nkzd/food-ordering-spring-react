@@ -18,7 +18,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
+import { Link as RouterLink } from "@reach/router";
+import Link from "@material-ui/core/Link";
 const Restaurant = ({ restaurantId }) => {
   const classes = useStyles();
   const authContext = useContext(authStore);
@@ -29,8 +30,8 @@ const Restaurant = ({ restaurantId }) => {
   const [categoryId, setCategoryId] = useState("all");
   const [refreshCategoryOnAdd, setRefreshCategoryOnAdd]=useState(false);
   const [refreshOnDelete, setRefreshOnDelete] = useState(false);
+  const [disableAddFoodButton, setDisableAddFoodButton] = useState(false);
 
-  //we load categories only once at first (default = all)
   useEffect(() => {
     fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/category/all`, {
       method: "GET",
@@ -47,24 +48,24 @@ const Restaurant = ({ restaurantId }) => {
       })
       .then(json => {
         setServerError(false);
+        if(json.length==0) {
+          setDisableAddFoodButton(true)
+        }else{
+          setDisableAddFoodButton(false);
+        } 
         setCategories(json);
       })
       .catch(err => {
         if (err.text) {
-          err.text().then(errorMessage => {
-            const errObj = JSON.parse(errorMessage);
-            console.log(errObj);
             authContext.dispatch({type: "logout"});
             navigate("/admin/login/");
-          });
         } else {
           setServerError(true);
         }
       });
 
   }, [refreshCategoryOnAdd]);
-//this hook will fetch data each time category changes
-useEffect(() => {
+  useEffect(() => {
     setLoading(true);
     fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/category/${categoryId}`, {
       method: "GET",
@@ -104,19 +105,22 @@ useEffect(() => {
         }
       });
   
-}, [categoryId,refreshOnDelete]);
+  }, [categoryId,refreshOnDelete]);
 
   return (
     <React.Fragment>
       <CssBaseline />
-      <AdminBar pageName="Food Articles" restaurantId={restaurantId} refresh={{refreshCategoryOnAdd, setRefreshCategoryOnAdd}}/>
+      <AdminBar pageName="Food Articles" restaurantId={restaurantId} refresh={{refreshCategoryOnAdd, setRefreshCategoryOnAdd}} disableAddFoodButton={disableAddFoodButton}/>
 
       <main>
         
         <Container className={classes.cardGrid} maxWidth="md">
+        <ServerErrorMessage error={serverError}/>
+
         <Grid container>
-          <ServerErrorMessage error={serverError}/>
-          <FormControl className={classes.formControl}>
+          {
+            (Array.isArray(categories)) && categories.length>0 &&
+            <FormControl className={classes.formControl}>
             <InputLabel id="demo-simple-select-autowidth-label">Category</InputLabel>
             <Select
               labelId="demo-simple-select-autowidth-label"
@@ -134,11 +138,19 @@ useEffect(() => {
               } 
             </Select> 
           </FormControl>
-          </Grid>
+          }
+        </Grid>
           
           <Grid container justify = "center">
             {loading && <CircularProgress />}
           </Grid>
+
+          { (Array.isArray(foodArticles)) && foodArticles.length==0 &&
+          <Grid container justify = "center">
+             <Typography>You have no food articles in your restaurant.</Typography>
+          </Grid>
+          } 
+
           <Grid container spacing={4}>
             {(Array.isArray(foodArticles)) && foodArticles.map(foodArticle => (
               <Grid item key={foodArticle.id} xs={12} sm={6} md={4}>
@@ -179,8 +191,16 @@ useEffect(() => {
               </Grid>
             ))}
           </Grid>
+          <Grid container className={classes.linkBack}>
+            <Grid item>
+              <Link component={RouterLink} to={`/admin/restaurants/`}>
+                {"< Back to restaurants"}
+              </Link>
+            </Grid>
+           </Grid>
         </Container>
       </main>
+      
     </React.Fragment>
   );
 }
@@ -225,6 +245,9 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3),
     minWidth: 120,
   },
+  linkBack: {
+    marginTop: theme.spacing(6)
+  }
 }));
 
 export default Restaurant;

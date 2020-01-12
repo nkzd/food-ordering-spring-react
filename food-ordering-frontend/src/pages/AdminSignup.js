@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -14,7 +14,6 @@ import ServerErrorMessage from "../components/ServerErrorMessage";
 
 const SignUp = () => {
   const classes = useStyles();
-
   const [serverError, setServerError] = useState(false);
 
   
@@ -43,7 +42,7 @@ const SignUp = () => {
           throw response;
         }
         setFieldErrors(initialFields);
-        navigate("/admin/login");
+        navigate("/admin/login",{ state: { sucReg: true }});
       })
       .catch(err => {
         if (err.text) {

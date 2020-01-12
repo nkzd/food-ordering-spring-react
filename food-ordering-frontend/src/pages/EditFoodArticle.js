@@ -55,9 +55,7 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
               return response.json(); 
             })
             .then(json => {
-                console.log(json);
               setServerError(false);
-              //price and id types
               setArticleFields(json);
             })
             .catch(err => {
@@ -65,7 +63,6 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
                   authContext.dispatch({type: "logout"});
                   navigate("/admin/login/");
               } else {
-                  console.log(err);
                 setServerError(true);
               }
             });
@@ -137,7 +134,6 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
           err.text().then(errorMessage => {
             
             const errObj = JSON.parse(errorMessage);
-            console.log(errObj);
             setLoading(false);
             setFieldErrors({
               ...initialFields,
@@ -145,7 +141,6 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
             });
           });
         } else {
-          console.log(err);
           setLoading(false);
           setServerError(true);
           setFieldErrors(initialFields);

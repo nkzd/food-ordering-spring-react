@@ -59,10 +59,8 @@ const CreateFoodArticle = ({restaurantId}) =>  {
       })
       .catch(err => {
         if (err.text) {
-          err.text().then(errorMessage => {
-            authContext.dispatch({type: "logout"});
-            navigate("/admin/login/");
-          });
+          authContext.dispatch({type: "logout"});
+          navigate("/admin/login/");
         } else {
           setServerError(true);
         }
@@ -103,7 +101,6 @@ const CreateFoodArticle = ({restaurantId}) =>  {
       .catch(err => {
         if (err.text) {
           err.text().then(errorMessage => {
-            console.log(errObj);
             const errObj = JSON.parse(errorMessage);
             setLoading(false);
             setFieldErrors({
@@ -112,7 +109,6 @@ const CreateFoodArticle = ({restaurantId}) =>  {
             });
           });
         } else {
-          console.log(err);
           setLoading(false);
           setServerError(true);
           setFieldErrors(initialFields);
@@ -151,7 +147,7 @@ const CreateFoodArticle = ({restaurantId}) =>  {
               />
             </Grid>
            
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={8}>
               <FormControl className={classes.formControl} required error={!!fieldErrors.categoryIdentifier}>
                 <InputLabel id="demo-simple-select-autowidth-label">Category</InputLabel>
                 <Select
@@ -171,7 +167,7 @@ const CreateFoodArticle = ({restaurantId}) =>  {
                 </Select> 
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 id="price"
                 name="price"
@@ -214,7 +210,7 @@ const CreateFoodArticle = ({restaurantId}) =>  {
           <Grid container>
             <Grid item>
               <Link component={RouterLink} to={`/admin/restaurants/${restaurantId}/`} variant="body2">
-                {"Back to restaurant"}
+                {"< Back to restaurant"}
               </Link>
             </Grid>
           </Grid>
@@ -244,7 +240,7 @@ const useStyles = makeStyles(theme => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 170,
+    minWidth: 210,
   },
 }));
 

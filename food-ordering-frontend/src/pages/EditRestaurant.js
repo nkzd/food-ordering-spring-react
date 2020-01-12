@@ -58,17 +58,14 @@ const EditRestaurant = (props) => {
       })
       .catch(err => {
         if (err.text) {
-          err.text().then(errorMessage => {
-            const errObj = JSON.parse(errorMessage);
-            console.log(errObj);
-            setLoading(false);
-            authContext.dispatch({type: "logout"});
-            navigate("/admin/login/");
-          });
+          
+          setLoading(false);
+          authContext.dispatch({type: "logout"});
+          navigate("/admin/login/");
+          
         } else {
           setLoading(false);
           setServerError(true);
-          console.log(err);
         }
       });
   }, []);

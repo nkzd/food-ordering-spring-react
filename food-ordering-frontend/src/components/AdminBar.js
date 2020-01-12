@@ -9,20 +9,7 @@ import AddIcon from "@material-ui/icons/Add";
 import { navigate } from "@reach/router";
 import { authStore } from "../store/AuthStore";
 import AddCategoryDialog from "./AddCategoryDialog"
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1
-  },
-  menuButton: {
-    marginRight: theme.spacing(2)
-  },
-  left: {
-    flexGrow: 1
-  },
-  right: {
-    margin: theme.spacing(2)
-  }
-}));
+import Tooltip from '@material-ui/core/Tooltip';
 
 const AdminBar = (props) => {
   const classes = useStyles();
@@ -35,31 +22,38 @@ const AdminBar = (props) => {
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar className={classes.toolbar}>
           <Typography variant="h6">{props.pageName}</Typography>
-          <Button
-            variant="contained"
-            className={classes.right}
-            endIcon={<AddIcon />}
-            onClick={() => {
-              switch (props.pageName) {
-                case "Food Articles":
-                  navigate(`/admin/restaurants/${props.restaurantId}/AddFoodArticle`);
-                  break;
-                case "Restaurants":
-                  navigate("/admin/restaurants/create");
-                  break;
-                default:
-                  navigate("/admin/restaurants/create");
-                  break;
-              }
-            }}
-          >
-            {props.pageName === "Food Articles"
-              ? " Add food"
-              : "Add restaurant"}
-          </Button>
           {props.pageName === "Food Articles" ? <AddCategoryDialog restaurantId={props.restaurantId} refresh={props.refresh}/> : "" }
+          
+          <Tooltip title={(props.disableAddFoodButton==null || props.disableAddFoodButton==false) ? "" : "You must add at least one category first."}>
+            <span>
+            <Button
+              variant="contained"
+              className={classes.right}
+              disabled= {(props.disableAddFoodButton==null || props.disableAddFoodButton==false) ? false : true}
+              endIcon={<AddIcon />}
+              onClick={() => {
+                switch (props.pageName) {
+                  case "Food Articles":
+                    navigate(`/admin/restaurants/${props.restaurantId}/AddFoodArticle`);
+                    break;
+                  case "Restaurants":
+                    navigate("/admin/restaurants/create");
+                    break;
+                  default:
+                    navigate("/admin/restaurants/create");
+                    break;
+                }
+              }}
+            >
+              {props.pageName === "Food Articles"
+                ? " Add food article"
+                : "Add restaurant"}
+            </Button>
+          </span>
+          </Tooltip>
+          
           
           <div className={classes.left}></div>
 
@@ -81,4 +75,19 @@ const AdminBar = (props) => {
     </div>
   );
 }
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1
+  },
+  left: {
+    flexGrow: 1
+  },
+  right: {
+    margin: theme.spacing(2)
+  },
+  toolbar: {
+    backgroundColor: "#5c6bc0"
+  }
+}));
 export default AdminBar;

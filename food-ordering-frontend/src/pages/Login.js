@@ -13,11 +13,10 @@ import { authStore } from "../store/AuthStore";
 import { navigate, Link as RouterLink } from "@reach/router";
 import ServerErrorMessage from "../components/ServerErrorMessage";
 import CircularProgress from '@material-ui/core/CircularProgress';
-const Login = () => {
+const Login = (props) => {
   const classes = useStyles();
   const authState = useContext(authStore);
   const { dispatch } = authState;
-
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState(false);
 
@@ -30,7 +29,11 @@ const Login = () => {
 
   const [fieldErrors, setFieldErrors] = useState(initialFields);
 
-
+  let showSuccessAfterRegistration=false;
+  if (typeof props.location.state.sucReg !== 'undefined') {
+    showSuccessAfterRegistration=true;
+  }
+  
 
   const handleLogin = event => {
     event.preventDefault();
@@ -67,14 +70,10 @@ const Login = () => {
       })
       .catch(err => {
         if (err.text) {
-          err.text().then(errorMessage => {
-            const errObj = JSON.parse(errorMessage);
-            console.log(errObj);
             setLoading(false);
             setFieldErrors({
               ...initialFields,
               username: "The username or password you have entered is invalid."
-            });
           });
         } else {
           setLoading(false);
@@ -95,7 +94,13 @@ const Login = () => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
+        {showSuccessAfterRegistration && 
+        <Typography className={classes.successfulRegistration} gutterBottom>
+            Registration successful. Please login.
+         </Typography>
+        }
         <ServerErrorMessage error={serverError}/>
+
         {loading && <CircularProgress />}
         <form className={classes.form} validate="true" onSubmit={handleLogin}>
           <TextField
@@ -172,6 +177,11 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
+  },
+  successfulRegistration: {
+    color: "#26a69a",
+    textAlign: "center",
+    marginTop: theme.spacing(2)
   }
 }));
 
