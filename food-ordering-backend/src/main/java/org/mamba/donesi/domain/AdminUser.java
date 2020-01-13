@@ -1,7 +1,5 @@
 package org.mamba.donesi.domain;
 
-import static org.mamba.donesi.security.SecurityConstants.ROLE_PREFIX;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -50,6 +48,7 @@ public class AdminUser implements UserDetails {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date updatedAt;
 
+	private final String ROLE_PREFIX = "ROLE_";
 	
 	@OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "adminUser", orphanRemoval = true)
 	private List<Restaurant> restaraunts = new ArrayList<>();

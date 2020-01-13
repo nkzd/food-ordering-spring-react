@@ -5,6 +5,7 @@ bin/
 !**/src/main/**
 !**/src/test/**
 *.class
+.env
 
 ### STS ###
 .apt_generated

@@ -2,7 +2,6 @@ package org.mamba.donesi.services;
 
 import org.mamba.donesi.domain.AdminUser;
 import org.mamba.donesi.exceptions.UsernameAlreadyExistsException;
-import org.mamba.donesi.exceptions.UsernameAlreadyExistsResponse;
 import org.mamba.donesi.repositories.AdminUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
