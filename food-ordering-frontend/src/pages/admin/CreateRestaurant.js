@@ -10,8 +10,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { navigate, Link as RouterLink } from "@reach/router";
-import {authStore} from "../store/AuthStore"
-import ServerErrorMessage from "../components/ServerErrorMessage";
+import {authStore} from "../../store/AuthStore"
+import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import CircularProgress from '@material-ui/core/CircularProgress';
 const CreateRestaurant = () => {
   const classes = useStyles();

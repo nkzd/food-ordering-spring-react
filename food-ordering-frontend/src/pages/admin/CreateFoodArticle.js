@@ -11,8 +11,8 @@ import FastfoodIcon from "@material-ui/icons/Fastfood";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import ServerErrorMessage from "../components/ServerErrorMessage";
-import {authStore} from "../store/AuthStore";
+import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
+import {authStore} from "../../store/AuthStore";
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -20,7 +20,7 @@ import { navigate, Link as RouterLink } from "@reach/router";
 import Link from "@material-ui/core/Link";
 
 
-const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
+const CreateFoodArticle = ({restaurantId}) =>  {
   const classes = useStyles();
   const authContext = useContext(authStore);
   const [categories, setCategories] = useState(undefined);
@@ -38,37 +38,6 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
   const [articleFields,setArticleFields] = useState(initialFields);
   const [fieldErrors, setFieldErrors] = useState(initialFields);
 
-  useEffect(() => {
-    if(categories){
-
-        fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/foodarticle/${foodArticleId}`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: authContext.state.token
-            }
-          })
-            .then(response => {
-              if (!response.ok) {
-                throw response;
-              }
-              return response.json(); 
-            })
-            .then(json => {
-              setServerError(false);
-              setArticleFields(json);
-            })
-            .catch(err => {
-              if (err.text) {
-                  authContext.dispatch({type: "logout"});
-                  navigate("/admin/login/");
-              } else {
-                setServerError(true);
-              }
-            });
-    }
-
-  }, [categories]);
 
   useEffect(() => {
     fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/category/all`, {
@@ -90,8 +59,8 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
       })
       .catch(err => {
         if (err.text) {
-            authContext.dispatch({type: "logout"});
-            navigate("/admin/login/");
+          authContext.dispatch({type: "logout"});
+          navigate("/admin/login/");
         } else {
           setServerError(true);
         }
@@ -99,11 +68,12 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
 
   }, []);
 
-  const handleEditArticle = () => {
+  const handleAddArticle = () => {
     event.preventDefault();
     if(articleFields.categoryIdentifier==="")
     {
       setFieldErrors({categoryIdentifier:"Category is required"});
+      
     }else {
     fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/foodarticle/`, {
       method: "POST",
@@ -112,7 +82,6 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
         Authorization: authContext.state.token
       },
       body: JSON.stringify({
-        id: foodArticleId,
         name: articleFields.name,
         price: parseFloat(articleFields.price),
         categoryIdentifier: articleFields.categoryIdentifier,
@@ -132,7 +101,6 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
       .catch(err => {
         if (err.text) {
           err.text().then(errorMessage => {
-            
             const errObj = JSON.parse(errorMessage);
             setLoading(false);
             setFieldErrors({
@@ -162,7 +130,7 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
         </Typography>
         <ServerErrorMessage error={serverError}/>
         {loading && <CircularProgress />}
-        <form className={classes.form} validate="true" onSubmit={handleEditArticle}>
+        <form className={classes.form} validate="true" onSubmit={handleAddArticle}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -179,7 +147,7 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
               />
             </Grid>
            
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={8}>
               <FormControl className={classes.formControl} required error={!!fieldErrors.categoryIdentifier}>
                 <InputLabel id="demo-simple-select-autowidth-label">Category</InputLabel>
                 <Select
@@ -199,7 +167,7 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
                 </Select> 
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 id="price"
                 name="price"
@@ -242,7 +210,7 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
           <Grid container>
             <Grid item>
               <Link component={RouterLink} to={`/admin/restaurants/${restaurantId}/`} variant="body2">
-                {"Back to restaurant"}
+                {"< Back to restaurant"}
               </Link>
             </Grid>
           </Grid>
@@ -272,8 +240,8 @@ const useStyles = makeStyles(theme => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 170,
+    minWidth: 210,
   },
 }));
 
-export default EditFoodArticle;
+export default CreateFoodArticle;

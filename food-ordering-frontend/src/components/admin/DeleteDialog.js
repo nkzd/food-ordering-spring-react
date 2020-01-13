@@ -5,7 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { authStore } from "../store/AuthStore";
+import { authStore } from "../../store/AuthStore";
 const RestaurantDeleteDialog = ({deleteId, refresh, type, restaurantId}) => {
   const [open, setOpen] = React.useState(false);
   

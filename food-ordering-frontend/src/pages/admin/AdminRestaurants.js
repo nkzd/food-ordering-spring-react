@@ -9,13 +9,13 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import AdminBar from "../components/AdminBar";
-import { authStore } from "../store/AuthStore";
+import AdminBar from "../../components/admin/AdminBar";
+import { authStore } from "../../store/AuthStore";
 import { navigate } from "@reach/router";
-import foodImage from "../images/food.jpeg";
-import ServerErrorMessage from "../components/ServerErrorMessage";
+import foodImage from "../../images/food.jpeg";
+import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import DeleteDialog from "../components/DeleteDialog";
+import DeleteDialog from "../../components/admin/DeleteDialog";
 const Restaurants = () => {
   const authContext = useContext(authStore);
   const classes = useStyles();

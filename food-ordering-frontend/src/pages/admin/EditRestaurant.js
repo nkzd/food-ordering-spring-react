@@ -9,9 +9,9 @@ import RestaurantIcon from "@material-ui/icons/Restaurant";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { authStore } from "../store/AuthStore";
+import { authStore } from "../../store/AuthStore";
 import { navigate, Link as RouterLink } from "@reach/router";
-import ServerErrorMessage from "../components/ServerErrorMessage";
+import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import CircularProgress from '@material-ui/core/CircularProgress';
 const EditRestaurant = (props) => {
   const classes = useStyles();

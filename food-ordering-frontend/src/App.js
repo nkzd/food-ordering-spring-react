@@ -1,15 +1,15 @@
 import React from "react";
 import { Router } from "@reach/router";
-import AdminSignup from "./pages/AdminSignup";
-import Login from "./pages/Login";
+import AdminSignup from "./pages/admin/AdminSignup";
+import Login from "./pages/admin/AdminLogin";
 import { AuthProvider } from "./store/AuthStore";
-import Restaurants from "./pages/Restaurants";
-import CreateRestaurant from "./pages/CreateRestaurant";
-import EditRestaurant from "./pages/EditRestaurant";
-import Restaurant from "./pages/Restaurant";
-import CreateFoodArticle from "./pages/CreateFoodArticle";
-import EditFoodArticle from "./pages/EditFoodArticle";
-import NotFound from "./pages/NotFound";
+import Restaurants from "./pages/admin/AdminRestaurants";
+import CreateRestaurant from "./pages/admin/CreateRestaurant";
+import EditRestaurant from "./pages/admin/EditRestaurant";
+import Restaurant from "./pages/admin/AdminRestaurant";
+import CreateFoodArticle from "./pages/admin/CreateFoodArticle";
+import EditFoodArticle from "./pages/admin/EditFoodArticle";
+import NotFound from "./pages/admin/NotFound";
 import { PublicRoute, ProtectedRoute } from "./Routes";
 const App = () => {
   return (

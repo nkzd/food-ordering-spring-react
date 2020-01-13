@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import AddIcon from "@material-ui/icons/Add";
 import { navigate } from "@reach/router";
-import { authStore } from "../store/AuthStore";
+import { authStore } from "../../store/AuthStore";
 import AddCategoryDialog from "./AddCategoryDialog"
 import Tooltip from '@material-ui/core/Tooltip';
 

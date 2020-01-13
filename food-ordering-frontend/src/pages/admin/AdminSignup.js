@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Link as RouterLink, navigate } from "@reach/router";
-import ServerErrorMessage from "../components/ServerErrorMessage";
+import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 
 const SignUp = () => {
   const classes = useStyles();
