@@ -1,48 +1,47 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { authStore } from "../store/AuthStore";
+import { authStore } from "../../store/AuthStore";
 import { navigate, Link as RouterLink } from "@reach/router";
-export default function SignIn() {
+import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
+import CircularProgress from '@material-ui/core/CircularProgress';
+const Login = (props) => {
   const classes = useStyles();
-
   const authState = useContext(authStore);
   const { dispatch } = authState;
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState(false);
 
-  const [fields, setFields] = React.useState({
-    username: "",
-    password: ""
-  });
-
-  const [loginPoruka, setloginPoruka] = React.useState("");
-
-  const [fieldErrors, setFieldErrors] = React.useState({
-    username: "",
-    password: ""
-  });
-
-  const initialFieldErrors = {
+  const initialFields = {
     username: "",
     password: ""
   };
 
+  const [fields, setFields] = useState(initialFields);
+
+  const [fieldErrors, setFieldErrors] = useState(initialFields);
+
+  let showSuccessAfterRegistration=false;
+  if (typeof props.location.state.sucReg !== 'undefined') {
+    showSuccessAfterRegistration=true;
+  }
+  
+
   const handleLogin = event => {
     event.preventDefault();
-
+    setLoading(true);
     fetch("http://localhost:8080/api/admin/users/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
-        //"Access-Control-Allow-Origin": "*"
       },
       body: JSON.stringify({
         username: fields.username,
@@ -56,9 +55,7 @@ export default function SignIn() {
         return response.json(); //we only get here if there is no error
       })
       .then(json => {
-        setFieldErrors(initialFieldErrors);
-        setloginPoruka(`uspjesan login! token je: ${JSON.stringify(json)}`);
-        //ovde treba login handle
+        setFieldErrors(initialFields);
 
         dispatch({
           type: "login",
@@ -67,30 +64,28 @@ export default function SignIn() {
             username: fields.username
           }
         });
-        //nakon uspjesnog logina idi na home
-        navigate("/");
+        setServerError(false);
+        setLoading(false);
+        navigate("/admin/");
       })
       .catch(err => {
         if (err.text) {
-          err.text().then(errorMessage => {
-            const errObj = JSON.parse(errorMessage);
-            console.log(errObj);
+            setLoading(false);
             setFieldErrors({
-              ...initialFieldErrors,
+              ...initialFields,
               username: "The username or password you have entered is invalid."
-            });
           });
         } else {
-          setFieldErrors(initialFieldErrors);
-          console.log(err);
-          setloginPoruka("Cudna greska! err: " + JSON.stringify(err));
+          setLoading(false);
+          setServerError(true);
+          setFieldErrors(initialFields);
         }
       });
   };
 
+
   return (
     <Container component="main" maxWidth="xs">
-      <p>{loginPoruka ? loginPoruka : ""}</p>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -99,6 +94,14 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
+        {showSuccessAfterRegistration && 
+        <Typography className={classes.successfulRegistration} gutterBottom>
+            Registration successful. Please login.
+         </Typography>
+        }
+        <ServerErrorMessage error={serverError}/>
+
+        {loading && <CircularProgress />}
         <form className={classes.form} validate="true" onSubmit={handleLogin}>
           <TextField
             variant="outlined"
@@ -145,32 +148,17 @@ export default function SignIn() {
           </Button>
           <Grid container>
             <Grid item>
-              <Link component={RouterLink} to="/signup" variant="body2">
+              <Link component={RouterLink} to="/admin/signup" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
           </Grid>
         </form>
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="#">
-        Aljosa Vukotic
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -189,5 +177,12 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
+  },
+  successfulRegistration: {
+    color: "#26a69a",
+    textAlign: "center",
+    marginTop: theme.spacing(2)
   }
 }));
+
+export default Login;

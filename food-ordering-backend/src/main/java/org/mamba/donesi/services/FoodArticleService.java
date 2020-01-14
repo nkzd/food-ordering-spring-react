@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.mamba.donesi.domain.FoodArticle;
 import org.mamba.donesi.domain.Restaurant;
-import org.mamba.donesi.exceptions.CategoryIdException;
 import org.mamba.donesi.exceptions.FoodArticleIdException;
 import org.mamba.donesi.repositories.FoodArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,12 @@ public class FoodArticleService {
 	FoodArticleRepository foodArticleRepository;
 
 	public List<FoodArticle> getAllFoodArticles(Restaurant restaurant) {
-		return foodArticleRepository.findByRestaurant(restaurant);
+		List<FoodArticle> allFoodArticles = foodArticleRepository.findByRestaurant(restaurant);
+		allFoodArticles.stream().forEach(foodArticle -> {
+			foodArticle.setCategoryIdentifier(foodArticle.getCategory().getId());
+		});
+
+		return allFoodArticles;
 	}
 
 	public FoodArticle getFoodArticleById(Restaurant restaurant, String foodArticleId) {
@@ -28,6 +32,8 @@ public class FoodArticleService {
 		if (foodArticle == null) {
 			throw new FoodArticleIdException("Food Article with this id doesn't exist");
 		}
+
+		foodArticle.setCategoryIdentifier(foodArticle.getCategory().getId());
 		return foodArticle;
 	}
 
