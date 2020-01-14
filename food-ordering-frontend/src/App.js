@@ -17,13 +17,6 @@ import UserRestaurants from "./pages/user/UserRestaurants";
 import { PublicRoute, ProtectedRoute } from "./Routes";
 const App = () => {
 
-  let welcomeComponent = AdminLogin;
-  if (localStorage.getItem("authState")) {
-    const cachedState = JSON.parse(localStorage.getItem("authState"));
-    if(cachedState.isAuthenticated)
-    welcomeComponent=AdminRestaurants;
-  }
-
   return (
     <AuthProvider>
       <Router>
