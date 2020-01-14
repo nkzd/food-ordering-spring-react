@@ -13,6 +13,8 @@ import { navigate, Link as RouterLink } from "@reach/router";
 import {authStore} from "../../store/AuthStore"
 import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import {apiUrl} from "../../App";
+
 const CreateRestaurant = () => {
   const classes = useStyles();
   const authContext = useContext(authStore);
@@ -34,7 +36,7 @@ const CreateRestaurant = () => {
   const handleCreate = event => {
     event.preventDefault();
     setLoading(true);
-    fetch("http://localhost:8080/api/admin/restaurant", {
+    fetch(`${apiUrl}/api/admin/restaurant`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

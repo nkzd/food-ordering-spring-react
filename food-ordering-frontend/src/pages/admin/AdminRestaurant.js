@@ -20,6 +20,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { Link as RouterLink } from "@reach/router";
 import Link from "@material-ui/core/Link";
+import {apiUrl} from "../../App";
+
 const Restaurant = ({ restaurantId }) => {
   const classes = useStyles();
   const authContext = useContext(authStore);
@@ -33,7 +35,7 @@ const Restaurant = ({ restaurantId }) => {
   const [disableAddFoodButton, setDisableAddFoodButton] = useState(false);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/category/all`, {
+    fetch(`${apiUrl}/api/admin/restaurant/${restaurantId}/category/all`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -67,7 +69,7 @@ const Restaurant = ({ restaurantId }) => {
   }, [refreshCategoryOnAdd]);
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/category/${categoryId}`, {
+    fetch(`${apiUrl}/api/admin/restaurant/${restaurantId}/category/${categoryId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

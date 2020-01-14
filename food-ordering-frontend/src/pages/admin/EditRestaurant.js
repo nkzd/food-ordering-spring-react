@@ -13,6 +13,8 @@ import { authStore } from "../../store/AuthStore";
 import { navigate, Link as RouterLink } from "@reach/router";
 import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import {apiUrl} from "../../App";
+
 const EditRestaurant = (props) => {
   const classes = useStyles();
 
@@ -34,7 +36,7 @@ const EditRestaurant = (props) => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:8080/api/admin/restaurant/${props.restaurantId}`, {
+    fetch(`${apiUrl}/api/admin/restaurant/${props.restaurantId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -73,7 +75,7 @@ const EditRestaurant = (props) => {
   const handleEdit = event => {
     event.preventDefault();
     setLoading(true);
-    fetch("http://localhost:8080/api/admin/restaurant", {
+    fetch(`${apiUrl}/api/admin/restaurant`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

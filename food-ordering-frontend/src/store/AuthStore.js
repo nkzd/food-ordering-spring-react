@@ -3,8 +3,7 @@ import React, { createContext, useReducer } from "react";
 let initialState = {
   token: "",
   username: "",
-  isAuthenticated: false,
-  successfulRegistration: false,
+  isAuthenticated: false
 };
 
 if (localStorage.getItem("authState")) {
@@ -34,16 +33,14 @@ const AuthProvider = ({ children }) => {
         return {
           token: action.payload.token,
           username: action.payload.username,
-          isAuthenticated: true,
-          successfulRegistration: false,
+          isAuthenticated: true
         };
       case "logout":
         localStorage.clear();
         return {
           token: "",
           username: "",
-          isAuthenticated: false,
-          successfulRegistration: false,
+          isAuthenticated: false
         };
       default:
         throw new Error("No case");

@@ -9,6 +9,7 @@ import { authStore } from "../../store/AuthStore";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
+import {apiUrl} from "../../App";
 
 const AddCategoryDialog = ({restaurantId, refresh}) => {
   const classes = useStyles();
@@ -21,7 +22,7 @@ const AddCategoryDialog = ({restaurantId, refresh}) => {
   const handleAdd = () => {
     setName("");
     event.preventDefault();
-    fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/category/`, {
+    fetch(`${apiUrl}/api/admin/restaurant/${restaurantId}/category/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

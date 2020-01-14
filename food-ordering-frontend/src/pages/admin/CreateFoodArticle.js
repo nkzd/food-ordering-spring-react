@@ -18,6 +18,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { navigate, Link as RouterLink } from "@reach/router";
 import Link from "@material-ui/core/Link";
+import {apiUrl} from "../../App";
 
 
 const CreateFoodArticle = ({restaurantId}) =>  {
@@ -40,7 +41,7 @@ const CreateFoodArticle = ({restaurantId}) =>  {
 
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/category/all`, {
+    fetch(`${apiUrl}/api/admin/restaurant/${restaurantId}/category/all`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -75,7 +76,7 @@ const CreateFoodArticle = ({restaurantId}) =>  {
       setFieldErrors({categoryIdentifier:"Category is required"});
       
     }else {
-    fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/foodarticle/`, {
+    fetch(`${apiUrl}/api/admin/restaurant/${restaurantId}/foodarticle/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

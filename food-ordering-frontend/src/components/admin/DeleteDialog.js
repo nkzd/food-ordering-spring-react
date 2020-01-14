@@ -6,6 +6,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { authStore } from "../../store/AuthStore";
+import {apiUrl} from "../../App";
+
 const RestaurantDeleteDialog = ({deleteId, refresh, type, restaurantId}) => {
   const [open, setOpen] = React.useState(false);
   
@@ -22,10 +24,10 @@ const RestaurantDeleteDialog = ({deleteId, refresh, type, restaurantId}) => {
     let url="";
     switch (type) {
       case "restaurant":
-        url = `http://localhost:8080/api/admin/restaurant/${deleteId}`;
+        url = `${apiUrl}/api/admin/restaurant/${deleteId}`;
         break;
       case "foodArticle":
-        url = `http://localhost:8080/api/admin/restaurant/${restaurantId}/foodarticle/${deleteId}`;
+        url = `${apiUrl}/api/admin/restaurant/${restaurantId}/foodarticle/${deleteId}`;
         break;
       default:
         throw new Error("no case");

@@ -16,6 +16,8 @@ import foodImage from "../../images/food.jpeg";
 import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import DeleteDialog from "../../components/admin/DeleteDialog";
+import {apiUrl} from "../../App";
+
 const Restaurants = () => {
   const authContext = useContext(authStore);
   const classes = useStyles();
@@ -26,7 +28,7 @@ const Restaurants = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:8080/api/admin/restaurant/all", {
+    fetch(`${apiUrl}/api/admin/restaurant/all`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

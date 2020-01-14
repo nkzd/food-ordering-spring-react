@@ -16,6 +16,14 @@ import UserRestaurants from "./pages/user/UserRestaurants";
 
 import { PublicRoute, ProtectedRoute } from "./Routes";
 const App = () => {
+
+  let welcomeComponent = AdminLogin;
+  if (localStorage.getItem("authState")) {
+    const cachedState = JSON.parse(localStorage.getItem("authState"));
+    if(cachedState.isAuthenticated)
+    welcomeComponent=AdminRestaurants;
+  }
+
   return (
     <AuthProvider>
       <Router>
@@ -23,7 +31,8 @@ const App = () => {
         <PublicRoute component={UserSignup} path="/signup" />
         <PublicRoute component={UserRestaurants} path="/restaurants" />
 
-        <PublicRoute component={AdminRestaurants} path="/admin/" />
+        
+        <ProtectedRoute component={AdminRestaurants} path="/admin/" />
         <PublicRoute component={AdminSignup} path="/admin/signup" />
         <PublicRoute component={AdminLogin} path="/admin/login" />
         <ProtectedRoute component={AdminRestaurants} path="/admin/restaurants" />
@@ -53,4 +62,6 @@ const App = () => {
     </AuthProvider>
   );
 };
+export const apiUrl="http://localhost:8080";
 export default App;
+

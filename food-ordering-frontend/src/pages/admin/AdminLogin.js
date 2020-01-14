@@ -13,6 +13,7 @@ import { authStore } from "../../store/AuthStore";
 import { navigate, Link as RouterLink } from "@reach/router";
 import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import {apiUrl} from "../../App";
 const Login = (props) => {
   const classes = useStyles();
   const authState = useContext(authStore);
@@ -38,7 +39,7 @@ const Login = (props) => {
   const handleLogin = event => {
     event.preventDefault();
     setLoading(true);
-    fetch("http://localhost:8080/api/admin/users/login", {
+    fetch(`${apiUrl}/api/admin/users/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

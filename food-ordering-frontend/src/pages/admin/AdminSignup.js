@@ -11,6 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Link as RouterLink, navigate } from "@reach/router";
 import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
+import {apiUrl} from "../../App";
 
 const SignUp = () => {
   const classes = useStyles();
@@ -26,7 +27,7 @@ const SignUp = () => {
   const [fieldErrors, setFieldErrors] = useState(initialFields);
 
   const handleRegister = () => {
-    fetch("http://localhost:8080/api/admin/users/register", {
+    fetch(`${apiUrl}/api/admin/users/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
