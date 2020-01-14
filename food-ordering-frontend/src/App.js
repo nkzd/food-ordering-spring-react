@@ -1,30 +1,38 @@
 import React from "react";
 import { Router } from "@reach/router";
 import AdminSignup from "./pages/admin/AdminSignup";
-import Login from "./pages/admin/AdminLogin";
+import AdminLogin from "./pages/admin/AdminLogin";
 import { AuthProvider } from "./store/AuthStore";
-import Restaurants from "./pages/admin/AdminRestaurants";
+import AdminRestaurants from "./pages/admin/AdminRestaurants";
 import CreateRestaurant from "./pages/admin/CreateRestaurant";
 import EditRestaurant from "./pages/admin/EditRestaurant";
-import Restaurant from "./pages/admin/AdminRestaurant";
+import AdminRestaurant from "./pages/admin/AdminRestaurant";
 import CreateFoodArticle from "./pages/admin/CreateFoodArticle";
 import EditFoodArticle from "./pages/admin/EditFoodArticle";
 import NotFound from "./pages/admin/NotFound";
+import UserLogin from "./pages/user/UserLogin";
+import UserSignup from "./pages/user/UserSignup";
+import UserRestaurants from "./pages/user/UserRestaurants";
+
 import { PublicRoute, ProtectedRoute } from "./Routes";
 const App = () => {
   return (
     <AuthProvider>
       <Router>
-        <PublicRoute component={Restaurants} path="/admin/" />
+        <PublicRoute component={UserLogin} path="/login" />
+        <PublicRoute component={UserSignup} path="/signup" />
+        <PublicRoute component={UserRestaurants} path="/restaurants" />
+
+        <PublicRoute component={AdminRestaurants} path="/admin/" />
         <PublicRoute component={AdminSignup} path="/admin/signup" />
-        <PublicRoute component={Login} path="/admin/login" />
-        <ProtectedRoute component={Restaurants} path="/admin/restaurants" />
+        <PublicRoute component={AdminLogin} path="/admin/login" />
+        <ProtectedRoute component={AdminRestaurants} path="/admin/restaurants" />
         <ProtectedRoute
           component={CreateRestaurant}
           path="/admin/restaurants/create"
         />
         <ProtectedRoute
-          component={Restaurant}
+          component={AdminRestaurant}
           path="/admin/restaurants/:restaurantId"
         />
         <ProtectedRoute
