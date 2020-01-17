@@ -9,9 +9,12 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import RestaurantCard from "../../components/user/RestaurantCard"
 import Search from "../../components/user/Search"
+import FoodArticleList from "../../components/user/FoodArticleList"
+import CategoryList from "../../components/user/CategoryList"
+import Basket from "../../components/user/Basket"
 import UserMenu from "../../components/user/UserMenu"
 import FastfoodRoundedIcon from '@material-ui/icons/FastfoodRounded';
-const UserRestaurants = () => {
+const UserRestaurant = () => {
     const classes = useStyles();
 
   return (
@@ -50,22 +53,27 @@ const UserRestaurants = () => {
       </Paper>
       </Container>
 
-      <Container maxWidth="md" className={classes.main}>
+      
+      <br/>
+      {/* {backgroundColor: "MintCream",} */}
+      <Container style={{ height: "70vh"}}>
+        <Grid container
+          direction="row"
+          justify="center"
+          alignItems="flex-start"
+          spacing={2}
+        >
+          <Grid item xs={2}>
+           <CategoryList/>
+          </Grid>
+          <Grid item xs={6}>
+            <FoodArticleList/>
+          </Grid>
+          <Grid item xs={3}>
+           <Basket/>
+          </Grid>
+        </Grid>
 
-        <div style={{ height: 45, width: '100%', position: 'relative' }}>
-          <Box   
-          position="absolute"
-          top={-27}
-          left="28%"
-          zIndex="tooltip">
-            <Search/>
-          </Box>
-        </div>
-        <RestaurantCard name={"Lorem Ipsum"} address={"Lorem Ipsum 12"}/>
-        <RestaurantCard name={"Lorem Ipsum"} address={"Lorem Ipsum 12"}/> 
-        <RestaurantCard name={"Lorem Ipsum"} address={"Lorem Ipsum 12"}/>
-        <RestaurantCard name={"Lorem Ipsum"} address={"Lorem Ipsum 12"}/>
-        <RestaurantCard name={"Lorem Ipsum"} address={"Lorem Ipsum 12"}/>
       </Container>
     </React.Fragment>
   );
@@ -82,15 +90,8 @@ const useStyles = makeStyles(theme => ({
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
         color: theme.palette.common.white,
-        height: "30vh",
-        position: 'relative',
+        height: "30vh"
         
-    },
-    main: {
-      height: "80vh"
-    },
-    search: {
-      backgroundColor:"#ffffff"
     },
     overlay: {
       position: 'absolute',
@@ -100,17 +101,13 @@ const useStyles = makeStyles(theme => ({
       left: 0,
       backgroundColor: 'rgba(0,0,0,.2)',
     },
-    mainFeaturedPostContent: {
-      position: 'relative',
-      padding: theme.spacing(3),
-      [theme.breakpoints.up('md')]: {
-        padding: theme.spacing(6),
-        paddingRight: 0,
-      },
-    },
     heroElement: {
       margin: theme.spacing(3)
+    },
+    paper: {
+        height: 300,
+        width: 180,
     }
   }));
 
-  export default UserRestaurants;
+  export default UserRestaurant;

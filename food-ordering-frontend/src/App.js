@@ -13,6 +13,7 @@ import NotFound from "./pages/admin/NotFound";
 import UserLogin from "./pages/user/UserLogin";
 import UserSignup from "./pages/user/UserSignup";
 import UserRestaurants from "./pages/user/UserRestaurants";
+import UserRestaurant from "./pages/user/UserRestaurant";
 
 import { PublicRoute, ProtectedRoute } from "./Routes";
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
         <PublicRoute component={UserLogin} path="/login" />
         <PublicRoute component={UserSignup} path="/signup" />
         <PublicRoute component={UserRestaurants} path="/restaurants" />
+        <PublicRoute component={UserRestaurant} path="/restaurant" />
 
         
         <ProtectedRoute component={AdminRestaurants} path="/admin/" />
