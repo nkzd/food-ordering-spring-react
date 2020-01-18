@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.mamba.donesi.security.JwtTokenProvider;
-import org.mamba.donesi.services.AdminUserDetailsService;
+import org.mamba.donesi.services.AppUserDetailsService;
 import org.mamba.donesi.config.ApiConfig;
-import org.mamba.donesi.domain.AdminUser;
+import org.mamba.donesi.domain.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,7 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	JwtTokenProvider tokenProvider;
 
 	@Autowired
-	AdminUserDetailsService adminUserDetailsService;
+	AppUserDetailsService appUserDetailsService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -39,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 			if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
 				Long userId = tokenProvider.getUserIdFromJWT(jwt);
-				AdminUser userDetails = adminUserDetailsService.loadUserById(userId);
+				AppUser userDetails = appUserDetailsService.loadUserById(userId);
 
 				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());

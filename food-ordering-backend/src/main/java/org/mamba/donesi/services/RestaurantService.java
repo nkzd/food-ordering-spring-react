@@ -2,7 +2,7 @@ package org.mamba.donesi.services;
 
 import java.util.Optional;
 
-import org.mamba.donesi.domain.AdminUser;
+import org.mamba.donesi.domain.AppUser;
 import org.mamba.donesi.domain.Category;
 import org.mamba.donesi.domain.FoodArticle;
 import org.mamba.donesi.domain.Restaurant;
@@ -10,7 +10,7 @@ import org.mamba.donesi.exceptions.CategoryIdException;
 import org.mamba.donesi.exceptions.FoodArticleIdException;
 import org.mamba.donesi.exceptions.RestaurantIdException;
 import org.mamba.donesi.exceptions.RestaurantNotFoundException;
-import org.mamba.donesi.repositories.AdminUserRepository;
+import org.mamba.donesi.repositories.AppUserRepository;
 import org.mamba.donesi.repositories.CategoryRepository;
 import org.mamba.donesi.repositories.FoodArticleRepository;
 import org.mamba.donesi.repositories.RestaurantRepository;
@@ -23,7 +23,7 @@ public class RestaurantService {
 	private RestaurantRepository restaurantRepository;
 
 	@Autowired
-	private AdminUserRepository adminUserRepository;
+	private AppUserRepository appUserRepository;
 
 	@Autowired
 	private CategoryRepository categoryRepository;
@@ -35,7 +35,7 @@ public class RestaurantService {
 	private CategoryService categoryService;
 
 	public Iterable<Restaurant> findAllRestaurants(String username) {
-		return restaurantRepository.findByAdminUser_Username(username);
+		return restaurantRepository.findByAppUser_Username(username);
 	}
 
 	public Restaurant findRestaurantById(String restaurantId, String username) {
@@ -44,7 +44,7 @@ public class RestaurantService {
 		if (!restaurant.isPresent()) {
 			throw new RestaurantIdException("Restaurant ID " + restaurantId + " does not exist");
 		}
-		if (!restaurant.get().getAdminUser().getUsername().equals(username)) {
+		if (!restaurant.get().getAppUser().getUsername().equals(username)) {
 			throw new RestaurantNotFoundException("Restaurant not found in your account");
 		}
 
@@ -60,15 +60,15 @@ public class RestaurantService {
 				throw new RestaurantIdException("Restaurant ID " + restaurant.getId() + " does not exist");
 			}
 
-			if (!existingRestaurant.get().getAdminUser().getUsername().equals(username)) {
+			if (!existingRestaurant.get().getAppUser().getUsername().equals(username)) {
 				throw new RestaurantNotFoundException("Restaurant not found in your account");
 			}
 
 		}
 
 		try {
-			AdminUser adminUser = adminUserRepository.findByUsername(username);
-			restaurant.setAdminUser(adminUser);
+			AppUser appUser = appUserRepository.findByUsername(username);
+			restaurant.setAppUser(appUser);
 
 			return restaurantRepository.save(restaurant);
 		} catch (Exception e) {
@@ -102,7 +102,7 @@ public class RestaurantService {
 				throw new FoodArticleIdException("Food Article ID " + foodArticle.getId() + " does not exist");
 			}
 
-			if (!existingFoodArticle.get().getRestaurant().getAdminUser().getUsername().equals(username)) {
+			if (!existingFoodArticle.get().getRestaurant().getAppUser().getUsername().equals(username)) {
 				throw new RestaurantNotFoundException("Food Article not found in your account");
 			}
 

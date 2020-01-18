@@ -1,7 +1,7 @@
 package org.mamba.donesi.security;
 
 import org.mamba.donesi.config.ApiConfig;
-import org.mamba.donesi.services.AdminUserDetailsService;
+import org.mamba.donesi.services.AppUserDetailsService;
 //import org.mamba.donesi.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +33,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	private JwtAuthenticationEntryPoint unauthorizedHandler;
 
 	@Autowired
-	private AdminUserDetailsService adminUserDetailsService;
+	private AppUserDetailsService appUserDetailsService;
 
 	@Override
 	@Bean(BeanIds.AUTHENTICATION_MANAGER)
@@ -48,7 +48,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-		authenticationManagerBuilder.userDetailsService(adminUserDetailsService)
+		authenticationManagerBuilder.userDetailsService(appUserDetailsService)
 				.passwordEncoder(bCryptPasswordEncoder());
 	}
 
@@ -76,7 +76,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-				.antMatchers(apiConfig.getPublicUrls()).permitAll()
+				.antMatchers("/api/users/userinfo").authenticated()
 				.antMatchers("/api/admin/**").hasRole("ADMIN")
 				.anyRequest().permitAll();
 

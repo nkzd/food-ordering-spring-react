@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.mamba.donesi.config.ApiConfig;
-import org.mamba.donesi.domain.AdminUser;
+import org.mamba.donesi.domain.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -25,16 +25,16 @@ public class JwtTokenProvider {
 	private ApiConfig apiConfig;
 
 	public String generateToken(Authentication authentication) {
-		AdminUser adminUser = (AdminUser) authentication.getPrincipal();
+		AppUser appUser = (AppUser) authentication.getPrincipal();
 
 		Date now = new Date(System.currentTimeMillis());
 		Date expiryDate = new Date(now.getTime() + apiConfig.getExpirationTime());
 
-		String userId = Long.toString(adminUser.getId());
+		String userId = Long.toString(appUser.getId());
 
 		Map<String, Object> claims = new HashMap<>();
-		claims.put("id", (Long.toString(adminUser.getId())));
-		claims.put("username", adminUser.getUsername());
+		claims.put("id", (Long.toString(appUser.getId())));
+		claims.put("username", appUser.getUsername());
 
 		return Jwts.builder().setSubject(userId).setClaims(claims).setIssuedAt(now).setExpiration(expiryDate)
 				.signWith(SignatureAlgorithm.HS512, System.getenv("jwt_secret")).compact();

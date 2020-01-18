@@ -38,5 +38,14 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 		FoodArticleIdResponse exceptionResponse = new FoodArticleIdResponse(ex.getMessage());
     	return new ResponseEntity(exceptionResponse,HttpStatus.BAD_REQUEST);
     }
-	
+	@ExceptionHandler
+    public final ResponseEntity<Object> handleIdException(IdException ex, WebRequest request){
+		IdResponse exceptionResponse = new IdResponse(ex.getMessage());
+    	return new ResponseEntity(exceptionResponse,HttpStatus.BAD_REQUEST);
+    }
+	@ExceptionHandler
+    public final ResponseEntity<Object> handleIdException(IdNotInAccountException ex, WebRequest request){
+		IdNotInAccountResponse exceptionResponse = new IdNotInAccountResponse(ex.getMessage());
+    	return new ResponseEntity(exceptionResponse,HttpStatus.BAD_REQUEST);
+    }
 }
