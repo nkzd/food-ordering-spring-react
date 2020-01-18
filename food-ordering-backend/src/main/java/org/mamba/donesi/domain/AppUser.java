@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
@@ -27,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class AdminUser implements UserDetails {
+public class AppUser implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -42,19 +43,39 @@ public class AdminUser implements UserDetails {
 
 	@Transient
 	private String confirmPassword;
+
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	@Column(updatable = false)
 	private Date createdAt;
+	
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date updatedAt;
 
+	@Transient
 	private final String ROLE_PREFIX = "ROLE_";
-	
-	@OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "adminUser", orphanRemoval = true)
-	private List<Restaurant> restaraunts = new ArrayList<>();
 
-	public AdminUser() {
+	@NotBlank(message = "Role is required")
+	private String role;
+
+	@OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "appUser", orphanRemoval = true)
+	private List<Restaurant> restaraunts = new ArrayList<>();
+	
+//    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "appUser")
+//    private UserInfo userInfo;
+	
+	@OneToOne(mappedBy = "appUser")
+	private UserInfo userInfo;
+	
+	public AppUser() {
 		super();
+	}
+
+	public List<Restaurant> getRestaraunts() {
+		return restaraunts;
+	}
+
+	public void setRestaraunts(List<Restaurant> restaraunts) {
+		this.restaraunts = restaraunts;
 	}
 
 	@PrePersist
@@ -115,11 +136,27 @@ public class AdminUser implements UserDetails {
 		this.updatedAt = updatedAt;
 	}
 
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public UserInfo getUserInfo() {
+		return userInfo;
+	}
+
+	public void setUserInfo(UserInfo userInfo) {
+		this.userInfo = userInfo;
+	}
+
 	@Override
 	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> list = new ArrayList<>();
-		list.add(new SimpleGrantedAuthority(ROLE_PREFIX + "ADMIN"));
+		list.add(new SimpleGrantedAuthority(ROLE_PREFIX + role));
 		return list;
 	}
 

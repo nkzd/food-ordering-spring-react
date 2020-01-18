@@ -41,9 +41,9 @@ public class Restaurant {
 	private String pictureUrl;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "adminUser_id", updatable = false, nullable = false)
+	@JoinColumn(name = "app_user_id", updatable = false, nullable = false)
 	@JsonIgnore
-	private AdminUser adminUser;
+	private AppUser appUser;
 
 	@OneToMany(cascade = CascadeType.REFRESH, mappedBy = "restaurant", orphanRemoval = true)
 	@JsonIgnore
@@ -128,12 +128,12 @@ public class Restaurant {
 		this.updatedAt = updatedAt;
 	}
 
-	public AdminUser getAdminUser() {
-		return adminUser;
+	public AppUser getAppUser() {
+		return appUser;
 	}
 
-	public void setAdminUser(AdminUser adminUser) {
-		this.adminUser = adminUser;
+	public void setAppUser(AppUser appUser) {
+		this.appUser = appUser;
 	}
 
 	public List<FoodArticle> getFoodArticles() {
