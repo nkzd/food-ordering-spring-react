@@ -27,7 +27,7 @@ const SignUp = () => {
   const [fieldErrors, setFieldErrors] = useState(initialFields);
 
   const handleRegister = () => {
-    fetch(`${apiUrl}/api/admin/users/register`, {
+    fetch(`${apiUrl}/api/users/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -35,7 +35,8 @@ const SignUp = () => {
       body: JSON.stringify({
         username: fields.username,
         password: fields.password,
-        confirmPassword: fields.confirmPassword
+        confirmPassword: fields.confirmPassword,
+        role: "ADMIN"
       })
     })
       .then(response => {
