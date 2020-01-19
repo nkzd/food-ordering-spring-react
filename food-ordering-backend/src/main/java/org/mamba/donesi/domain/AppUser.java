@@ -63,7 +63,7 @@ public class AppUser implements UserDetails {
 //    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "appUser")
 //    private UserInfo userInfo;
 	
-	@OneToOne(mappedBy = "appUser")
+	@OneToOne(mappedBy = "appUser",cascade = CascadeType.ALL)
 	private UserInfo userInfo;
 	
 	public AppUser() {

@@ -28,6 +28,7 @@ public class AppUserService {
 			newAppUser.setConfirmPassword("");
 			return appUser;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new AlreadyExistsException("Username " + newAppUser.getUsername() + " already exists");
 		}
 	}
