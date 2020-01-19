@@ -1,9 +1,9 @@
 package org.mamba.donesi.exceptions;
 
-public class IdNotInAccountResponse {
+public class NotInAccountResponse {
 	private String idNotFound;
 
-	public IdNotInAccountResponse(String idNotFound) {
+	public NotInAccountResponse(String idNotFound) {
 		super();
 		this.idNotFound = idNotFound;
 	}
