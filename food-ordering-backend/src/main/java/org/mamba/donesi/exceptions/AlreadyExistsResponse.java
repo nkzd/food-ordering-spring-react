@@ -1,6 +1,6 @@
 package org.mamba.donesi.exceptions;
 
-public class UsernameAlreadyExistsResponse {
+public class AlreadyExistsResponse {
 	private String username;
 
 	public String getUsername() {
@@ -11,7 +11,7 @@ public class UsernameAlreadyExistsResponse {
 		this.username = username;
 	}
 
-	public UsernameAlreadyExistsResponse(String username) {
+	public AlreadyExistsResponse(String username) {
 		super();
 		this.username = username;
 	}
