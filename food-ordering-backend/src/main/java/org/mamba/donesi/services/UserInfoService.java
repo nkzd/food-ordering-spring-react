@@ -3,6 +3,7 @@ package org.mamba.donesi.services;
 import org.mamba.donesi.domain.AppUser;
 import org.mamba.donesi.domain.UserInfo;
 import org.mamba.donesi.exceptions.AlreadyExistsException;
+import org.mamba.donesi.exceptions.IdException;
 import org.mamba.donesi.exceptions.NotInAccountException;
 import org.mamba.donesi.repositories.AppUserRepository;
 import org.mamba.donesi.repositories.UserInfoRepository;
@@ -38,7 +39,12 @@ public class UserInfoService {
 
 	public UserInfo getUserInfo(AppUser appuser) {
 
-		return appuser.getUserInfo();
+		UserInfo userInfo = appuser.getUserInfo();
+		if (userInfo == null)
+			throw new IdException("User info does not exist.");
+
+		return userInfo;
+
 	}
 
 }

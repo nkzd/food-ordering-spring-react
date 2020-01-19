@@ -110,7 +110,7 @@ public class AppUserController {
 		
 		UserInfo userInfo = userInfoService.getUserInfo(appUser);
 		
-		return new ResponseEntity<UserInfo>(userInfo, HttpStatus.CREATED);
+		return new ResponseEntity<UserInfo>(userInfo, HttpStatus.OK);
 	}
 
 }
