@@ -14,6 +14,7 @@ import org.mamba.donesi.services.AppUserService;
 import org.mamba.donesi.services.MapValidationErrorService;
 import org.mamba.donesi.services.UserInfoService;
 import org.mamba.donesi.validator.AppUserValidator;
+import org.mamba.donesi.validator.UserInfoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +53,9 @@ public class AppUserController {
 	
 	@Autowired
 	private UserInfoService userInfoService;
+	
+	@Autowired
+	private UserInfoValidator userInfoValidator;
 
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@Valid @RequestBody AppUser user, BindingResult result) {
@@ -67,7 +70,21 @@ public class AppUserController {
 		errorMap = mapValidationErrorService.MapValidationService(result);
 		if (errorMap != null)
 			return errorMap;
+		
+		UserInfo userInfo = user.getUserInfo();
+		
+		if(userInfo!=null) {
+			userInfoValidator.validate(userInfo, result);
+		}
+		errorMap = mapValidationErrorService.MapValidationService(result);
+		if (errorMap != null)
+			return errorMap;
+		
 		AppUser newUser = appUserService.save(user);
+		
+		if(userInfo!=null) {
+			userInfoService.saveOrUpdateUserInfo(newUser, user.getUserInfo());
+		}
 		return new ResponseEntity<AppUser>(newUser, HttpStatus.CREATED);
 	}
 	

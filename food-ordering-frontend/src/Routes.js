@@ -13,5 +13,4 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
 const PublicRoute = ({ component: Component, ...rest }) => {
   return <Component {...rest} />;
 };
-
 export { ProtectedRoute, PublicRoute };

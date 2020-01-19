@@ -45,7 +45,7 @@ public class UserInfo {
 //    @JsonIgnore
 //    private AppUser appUser;
 	
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(unique = true)
     @JsonIgnore
     private AppUser appUser;
