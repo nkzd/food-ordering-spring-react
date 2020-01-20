@@ -12,11 +12,11 @@ import Container from "@material-ui/core/Container";
 import { Link as RouterLink, navigate } from "@reach/router";
 import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import {apiUrl} from "../../App";
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 const SignUp = () => {
   const classes = useStyles();
   const [serverError, setServerError] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   
   const initialFields = {
     username: "",
@@ -27,6 +27,7 @@ const SignUp = () => {
   const [fieldErrors, setFieldErrors] = useState(initialFields);
 
   const handleRegister = () => {
+    setLoading(true);
     fetch(`${apiUrl}/api/users/register`, {
       method: "POST",
       headers: {
@@ -44,16 +45,18 @@ const SignUp = () => {
           throw response;
         }
         setFieldErrors(initialFields);
+        setLoading(false);
         navigate("/admin/login",{ state: { sucReg: true }});
       })
       .catch(err => {
         if (err.text) {
           err.text().then(errorMessage => {
             const errObj = JSON.parse(errorMessage);
-
+            setLoading(false);
             setFieldErrors({ ...initialFields, ...errObj });
           });
         } else {
+          setLoading(false);
           setServerError(true)
           setFieldErrors(initialFields);
         }
@@ -72,6 +75,7 @@ const SignUp = () => {
           Sign up
         </Typography>
         <ServerErrorMessage error={serverError}/>
+        {loading && <CircularProgress />}
         <form
           className={classes.form}
           validate="true"

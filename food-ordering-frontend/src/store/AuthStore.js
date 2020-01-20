@@ -11,7 +11,7 @@ if (localStorage.getItem("authState")) {
   initialState = {
     token: cachedState.token,
     username: cachedState.username,
-    isAuthenticated: cachedState.isAuthenticated
+    isAuthenticated: true
   };
 }
 
@@ -21,15 +21,17 @@ const { Provider } = authStore;
 const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer((state, action) => {
     switch (action.type) {
+
       case "login":
-        localStorage.setItem(
-          "authState",
-          JSON.stringify({
-            token: action.payload.token,
-            username: action.payload.username,
-            isAuthenticated: true
-          })
-        );
+        if(action.payload.rememberMe){
+          localStorage.setItem(
+            "authState",
+            JSON.stringify({
+              token: action.payload.token,
+              username: action.payload.username
+            })
+          );
+        }
         return {
           token: action.payload.token,
           username: action.payload.username,

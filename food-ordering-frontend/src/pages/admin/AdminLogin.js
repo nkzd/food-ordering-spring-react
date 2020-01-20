@@ -14,6 +14,8 @@ import { navigate, Link as RouterLink } from "@reach/router";
 import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {apiUrl} from "../../App";
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 const Login = (props) => {
   const classes = useStyles();
   const authState = useContext(authStore);
@@ -23,7 +25,8 @@ const Login = (props) => {
 
   const initialFields = {
     username: "",
-    password: ""
+    password: "",
+    checked: false
   };
 
   const [fields, setFields] = useState(initialFields);
@@ -62,7 +65,8 @@ const Login = (props) => {
           type: "login",
           payload: {
             token: json.token,
-            username: fields.username
+            username: fields.username,
+            rememberMe: fields.checked
           }
         });
         setServerError(false);
@@ -138,6 +142,14 @@ const Login = (props) => {
             helperText={fieldErrors.password}
             error={!!fieldErrors.password}
           />
+          <FormControlLabel
+              control={
+              <Checkbox value="remember" color="primary" checked={fields.checked} onChange={event=>{
+                setFields({ ...fields, checked: event.target.checked });
+              }}/>
+            }
+              label="Remember me"
+            />
           <Button
             type="submit"
             fullWidth
