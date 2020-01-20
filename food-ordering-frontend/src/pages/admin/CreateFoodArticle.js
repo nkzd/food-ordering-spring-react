@@ -45,7 +45,7 @@ const CreateFoodArticle = ({restaurantId}) =>  {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: authContext.state.token
+        Authorization: authContext.state.adminState.token
       }
     })
       .then(response => {
@@ -60,7 +60,7 @@ const CreateFoodArticle = ({restaurantId}) =>  {
       })
       .catch(err => {
         if (err.text) {
-          authContext.dispatch({type: "logout"});
+          authContext.dispatch({type: "adminLogout"});
           navigate("/admin/login/");
         } else {
           setServerError(true);
@@ -80,7 +80,7 @@ const CreateFoodArticle = ({restaurantId}) =>  {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: authContext.state.token
+        Authorization: authContext.state.adminState.token
       },
       body: JSON.stringify({
         name: articleFields.name,

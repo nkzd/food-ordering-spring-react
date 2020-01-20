@@ -33,9 +33,13 @@ const Login = (props) => {
 
   const [fieldErrors, setFieldErrors] = useState(initialFields);
 
+  //Show successful registration message if user just registrated.
   let showSuccessAfterRegistration=false;
-  if (typeof props.location.state.sucReg !== 'undefined') {
-    showSuccessAfterRegistration=true;
+  try{
+    if(props.location.state.sucReg===true)
+      showSuccessAfterRegistration=true;
+  }catch(err){
+    showSuccessAfterRegistration=false;
   }
   
 
@@ -56,13 +60,13 @@ const Login = (props) => {
         if (!response.ok) {
           throw response;
         }
-        return response.json(); //we only get here if there is no error
+        return response.json(); 
       })
       .then(json => {
         setFieldErrors(initialFields);
 
         dispatch({
-          type: "login",
+          type: "adminLogin",
           payload: {
             token: json.token,
             username: fields.username,
@@ -144,7 +148,8 @@ const Login = (props) => {
           />
           <FormControlLabel
               control={
-              <Checkbox value="remember" color="primary" checked={fields.checked} onChange={event=>{
+              <Checkbox value="remember" color="primary" checked={fields.checked} 
+              onChange={event=>{
                 setFields({ ...fields, checked: event.target.checked });
               }}/>
             }
