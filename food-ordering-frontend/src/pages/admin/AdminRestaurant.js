@@ -39,7 +39,7 @@ const Restaurant = ({ restaurantId }) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: authContext.state.token
+        Authorization: authContext.state.adminState.token
       }
     })
       .then(response => {
@@ -59,7 +59,7 @@ const Restaurant = ({ restaurantId }) => {
       })
       .catch(err => {
         if (err.text) {
-            authContext.dispatch({type: "logout"});
+            authContext.dispatch({type: "adminLogout"});
             navigate("/admin/login/");
         } else {
           setServerError(true);
@@ -73,7 +73,7 @@ const Restaurant = ({ restaurantId }) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: authContext.state.token
+        Authorization: authContext.state.adminState.token
       }
     })
       .then(response => {
@@ -99,7 +99,7 @@ const Restaurant = ({ restaurantId }) => {
       .catch(err => {
         if (err.text) {
           setLoading(false);
-          authContext.dispatch({type: "logout"});
+          authContext.dispatch({type: "adminLogout"});
           navigate("/admin/login/");
         } else {
           setLoading(false);

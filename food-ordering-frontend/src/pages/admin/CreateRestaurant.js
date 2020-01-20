@@ -40,7 +40,7 @@ const CreateRestaurant = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": authContext.state.token
+        "Authorization": authContext.state.adminState.token
       },
       body: JSON.stringify({
         name: restaurantFields.name,

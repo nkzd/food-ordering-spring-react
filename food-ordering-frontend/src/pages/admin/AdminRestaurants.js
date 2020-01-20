@@ -32,7 +32,7 @@ const Restaurants = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: authContext.state.token
+        Authorization: authContext.state.adminState.token
       }
     })
       .then(response => {
@@ -49,7 +49,7 @@ const Restaurants = () => {
       .catch(err => {
         if (err.text) {
           setLoading(false);
-          authContext.dispatch({type: "logout"});
+          authContext.dispatch({type: "adminLogout"});
           navigate("/admin/login/");
         } else {
           setLoading(false);

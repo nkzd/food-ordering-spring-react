@@ -16,7 +16,7 @@ const AdminBar = (props) => {
   const authContext = useContext(authStore);
 
   const handleLogout = () => {
-    authContext.dispatch({ type: "logout" });
+    authContext.dispatch({ type: "adminLogout" });
     navigate("/admin/login");
   };
   return (
@@ -58,7 +58,7 @@ const AdminBar = (props) => {
           <div className={classes.left}></div>
 
           <Typography variant="subtitle1" className={classes.right}>
-            {authContext.state.username}
+            {authContext.state.adminState.username}
           </Typography>
 
           <Button

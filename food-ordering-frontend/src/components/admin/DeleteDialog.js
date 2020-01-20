@@ -36,7 +36,7 @@ const RestaurantDeleteDialog = ({deleteId, refresh, type, restaurantId}) => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: authContext.state.token
+          Authorization: authContext.state.adminState.token
         }
       })
         .then(response => {

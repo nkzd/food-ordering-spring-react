@@ -40,7 +40,7 @@ const EditRestaurant = (props) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: authContext.state.token
+        Authorization: authContext.state.adminState.token
       }
     })
       .then(response => {
@@ -62,7 +62,7 @@ const EditRestaurant = (props) => {
         if (err.text) {
           
           setLoading(false);
-          authContext.dispatch({type: "logout"});
+          authContext.dispatch({type: "adminLogout"});
           navigate("/admin/login/");
           
         } else {
@@ -79,7 +79,7 @@ const EditRestaurant = (props) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": authContext.state.token
+        "Authorization": authContext.state.adminState.token
       },
       body: JSON.stringify({
         id: props.restaurantId,
@@ -142,7 +142,7 @@ const EditRestaurant = (props) => {
                 onChange={event => {
                   setRestaurantFields({
                     ...restaurantFields,
-                    username: event.target.value
+                    name: event.target.value
                   });
                 }}
                 helperText={fieldErrors.name}

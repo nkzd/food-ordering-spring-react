@@ -23,31 +23,53 @@ const App = () => {
       <Router>
         <PublicRoute component={UserLogin} path="/login" />
         <PublicRoute component={UserSignup} path="/signup" />
-        <PublicRoute component={UserRestaurants} path="/restaurants" />
-        <PublicRoute component={UserRestaurant} path="/restaurant" />
-
         
-        <ProtectedRoute component={AdminRestaurants} path="/admin/" />
+        <ProtectedRoute 
+        component={UserRestaurants} 
+        authRequired="user" 
+        path="/restaurants" 
+        />
+        <ProtectedRoute 
+        component={UserRestaurant} 
+        authRequired="user" 
+        path="/restaurant" 
+        />
+        
         <PublicRoute component={AdminSignup} path="/admin/signup" />
         <PublicRoute component={AdminLogin} path="/admin/login" />
-        <ProtectedRoute component={AdminRestaurants} path="/admin/restaurants" />
+
+        <ProtectedRoute 
+        component={AdminRestaurants} 
+        authRequired="admin" 
+        path="/admin/" 
+        />
+        <ProtectedRoute 
+        component={AdminRestaurants} 
+        authRequired="admin" 
+        path="/admin/restaurants" 
+        />
         <ProtectedRoute
+          authRequired="admin"
           component={CreateRestaurant}
           path="/admin/restaurants/create"
         />
         <ProtectedRoute
+          authRequired="admin"
           component={AdminRestaurant}
           path="/admin/restaurants/:restaurantId"
         />
         <ProtectedRoute
+          authRequired="admin"
           component={EditRestaurant}
           path="/admin/restaurants/:restaurantId/edit"
         />
         <ProtectedRoute
+          authRequired="admin"
           component={CreateFoodArticle}
           path="/admin/restaurants/:restaurantId/AddFoodArticle"
         />
         <ProtectedRoute
+          authRequired="admin"
           component={EditFoodArticle}
           path="/admin/restaurants/:restaurantId/:foodArticleId/edit"
         />
