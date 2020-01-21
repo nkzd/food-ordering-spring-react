@@ -12,23 +12,44 @@ let initialUserState = {
   isAuthenticated: false
 };
 
-if (localStorage.getItem("adminAuthState")) {
-  const cachedState = JSON.parse(localStorage.getItem("adminAuthState"));
+//session cache
+if (sessionStorage.getItem("adminAuthState")) {
+  const cachedState = JSON.parse(sessionStorage.getItem("adminAuthState"));
   initialAdminState = {
     token: cachedState.token,
     username: cachedState.username,
     isAuthenticated: true
   };
+}else{
+  //"remember me" cache
+  if (localStorage.getItem("adminAuthState")) {
+    const cachedState = JSON.parse(localStorage.getItem("adminAuthState"));
+    initialAdminState = {
+      token: cachedState.token,
+      username: cachedState.username,
+      isAuthenticated: true
+    };
+  }
 }
 
-if (localStorage.getItem("userAuthState")) {
-  const cachedState = JSON.parse(localStorage.getItem("userAuthState"));
+if (sessionStorage.getItem("userAuthState")) {
+  const cachedState = JSON.parse(sessionStorage.getItem("userAuthState"));
   initialUserState = {
     token: cachedState.token,
     username: cachedState.username,
     isAuthenticated: true
   };
+}else{
+  if (localStorage.getItem("userAuthState")) {
+    const cachedState = JSON.parse(localStorage.getItem("userAuthState"));
+    initialUserState = {
+      token: cachedState.token,
+      username: cachedState.username,
+      isAuthenticated: true
+    };
+  }
 }
+
 
 const initialState={
   adminState: initialAdminState,
@@ -43,6 +64,15 @@ const AuthProvider = ({ children }) => {
     switch (action.type) {
       
       case "adminLogin":
+
+        sessionStorage.setItem(
+          "adminAuthState",
+          JSON.stringify({
+            token: action.payload.token,
+            username: action.payload.username
+          })
+        );
+
         if(action.payload.rememberMe){
           localStorage.setItem(
             "adminAuthState",
@@ -62,6 +92,15 @@ const AuthProvider = ({ children }) => {
         };
 
         case "userLogin":
+
+          sessionStorage.setItem(
+            "userAuthState",
+            JSON.stringify({
+              token: action.payload.token,
+              username: action.payload.username
+            })
+          );
+
         if(action.payload.rememberMe){
           localStorage.setItem(
             "userAuthState",
@@ -82,6 +121,7 @@ const AuthProvider = ({ children }) => {
         };
 
       case "adminLogout":
+        sessionStorage.clear();
         localStorage.clear();
         return {
           ...state,
@@ -93,6 +133,7 @@ const AuthProvider = ({ children }) => {
           }
         };
         case "userLogout":
+        sessionStorage.clear();
         localStorage.clear();
         return {
           ...state,
