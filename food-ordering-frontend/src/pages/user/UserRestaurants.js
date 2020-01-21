@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
@@ -11,9 +11,52 @@ import RestaurantCard from "../../components/user/RestaurantCard"
 import Search from "../../components/user/Search"
 import UserMenu from "../../components/user/UserMenu"
 import FastfoodRoundedIcon from '@material-ui/icons/FastfoodRounded';
-const UserRestaurants = () => {
-    const classes = useStyles();
+import { authStore } from "../../store/AuthStore";
+import { navigate } from "@reach/router";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import {apiUrl} from "../../App";
+import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 
+const UserRestaurants = () => {
+  
+  const authContext = useContext(authStore);
+  const classes = useStyles();
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState({ restaurants: [] });
+  const [serverError, setServerError] = useState(false);
+  const [searchField,setSearchField] = useState("");
+  const [restaurants, setRestaurants]=useState([]);
+  useEffect(() => {
+    setLoading(true);
+    fetch(`${apiUrl}/api/restaurant/all`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authContext.state.userState.token
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw response;
+      }
+      return response.json(); 
+    })
+    .then(json => {
+      setLoading(false);
+      setServerError(false);
+      setData({ restaurants: json });
+    })
+    .catch(err => {
+      if (err.text) {
+        setLoading(false);
+        authContext.dispatch({type: "userLogout"});
+        navigate("/login/");
+      } else {
+        setLoading(false);
+        setServerError(true);
+      }
+    });
+  }, []);
   return (
     <React.Fragment>
       <CssBaseline />
@@ -58,14 +101,28 @@ const UserRestaurants = () => {
           top={-27}
           left="28%"
           zIndex="tooltip">
-            <Search/>
+            <Search field={{searchField,setSearchField}}/>
           </Box>
         </div>
-        <RestaurantCard name={"Lorem Ipsum"} address={"Lorem Ipsum 12"}/>
-        <RestaurantCard name={"Lorem Ipsum"} address={"Lorem Ipsum 12"}/> 
-        <RestaurantCard name={"Lorem Ipsum"} address={"Lorem Ipsum 12"}/>
-        <RestaurantCard name={"Lorem Ipsum"} address={"Lorem Ipsum 12"}/>
-        <RestaurantCard name={"Lorem Ipsum"} address={"Lorem Ipsum 12"}/>
+
+        <Grid container justify = "center">
+            {loading && <CircularProgress />}
+        </Grid>
+
+        <ServerErrorMessage error={serverError}/>
+        {
+          data.restaurants
+          .filter(restaurant=>{
+            if(searchField)
+            {
+              return restaurant.name.toLowerCase().indexOf(searchField.toLowerCase()) >= 0; 
+            }
+            return true;
+          })
+          .map(restaurant=>(
+            <RestaurantCard key={restaurant.id} name={restaurant.name} address={restaurant.address} pictureUrl={restaurant.pictureUrl} id={restaurant.id}/>
+          ))
+        }
       </Container>
     </React.Fragment>
   );

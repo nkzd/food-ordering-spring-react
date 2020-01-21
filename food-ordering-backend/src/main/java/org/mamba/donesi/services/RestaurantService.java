@@ -33,8 +33,12 @@ public class RestaurantService {
 	@Autowired
 	private CategoryService categoryService;
 
-	public Iterable<Restaurant> findAllRestaurants(String username) {
+	public Iterable<Restaurant> findAllRestaurantsByUser(String username) {
 		return restaurantRepository.findByAppUser_Username(username);
+	}
+	
+	public Iterable<Restaurant> findAllRestaurants() {
+		return restaurantRepository.findAll();
 	}
 
 	public Restaurant findRestaurantById(String restaurantId, String username) {

@@ -25,15 +25,19 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Search = () => {
+const Search = ({field}) => {
   const classes = useStyles();
-
+  const {searchField, setSearchField} = field;
   return (
     <Paper component="form" className={classes.root}>
       <InputBase
         className={classes.input}
         placeholder="Search restaurants"
         inputProps={{ 'aria-label': 'search restaurants' }}
+        value={searchField}
+        onChange={event => {
+          setSearchField(event.target.value);
+        }}
       />
       <IconButton type="submit" className={classes.iconButton} aria-label="search">
         <SearchIcon />

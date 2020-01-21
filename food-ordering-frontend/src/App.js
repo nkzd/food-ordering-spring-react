@@ -34,7 +34,12 @@ const App = () => {
         authRequired="user" 
         path="/restaurant" 
         />
-        
+        <ProtectedRoute 
+        component={UserRestaurants} 
+        authRequired="user" 
+        path="/" 
+        />
+
         <PublicRoute component={AdminSignup} path="/admin/signup" />
         <PublicRoute component={AdminLogin} path="/admin/login" />
 
