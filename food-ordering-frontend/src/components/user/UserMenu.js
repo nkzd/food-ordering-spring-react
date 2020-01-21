@@ -22,7 +22,7 @@ const UserMenu = ()=> {
   const [user,setUser]=useState({firstName:""});
 
   useEffect(()=>{
-    fetch(`${apiUrl}/api/users/userinfo`, {
+    fetch(`${apiUrl}/api/user/userinfo`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

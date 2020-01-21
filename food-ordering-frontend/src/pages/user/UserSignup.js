@@ -32,7 +32,7 @@ const UserSignup = () => {
 
   const handleRegister = (event) => {
     event.preventDefault();
-    fetch(`${apiUrl}/api/users/register`, {
+    fetch(`${apiUrl}/api/user/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
