@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect, useState, useContext} from 'react';
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
@@ -9,19 +9,39 @@ import MenuList from '@material-ui/core/MenuList';
 import { makeStyles } from '@material-ui/core/styles';
 import PersonIcon from '@material-ui/icons/Person';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-  },
-  paper: {
-    marginRight: theme.spacing(2),
-  },
-}));
+import { authStore } from "../../store/AuthStore";
+import {apiUrl} from "../../App";
+import { navigate } from "@reach/router";
 
-export default function MenuListComposition() {
+const UserMenu = ()=> {
+  const authContext = useContext(authStore);
+
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
+  const [user,setUser]=useState({firstName:""});
+
+  useEffect(()=>{
+    fetch(`${apiUrl}/api/users/userinfo`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authContext.state.userState.token
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw response;
+        }
+        return response.json(); 
+      })
+      .then(json => {
+        setUser(json);
+      })
+      .catch(err => {
+        //other page components will handle errors.
+      });
+  },[]);
 
   const handleToggle = () => {
     setOpen(prevOpen => !prevOpen);
@@ -33,6 +53,15 @@ export default function MenuListComposition() {
     }
 
     setOpen(false);
+  };
+
+  const handleLogout = event => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+    setOpen(false);
+    authContext.dispatch({ type: "userLogout" });
+    navigate("/login");
   };
 
   function handleListKeyDown(event) {
@@ -65,7 +94,7 @@ export default function MenuListComposition() {
           endIcon={<ArrowDropDownIcon/>}
           color="inherit"
         >
-          Marko
+          {user.firstName}
         </Button>
         
         <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
@@ -78,7 +107,7 @@ export default function MenuListComposition() {
                 <ClickAwayListener onClickAway={handleClose}>
                   <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
                     <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
                   </MenuList>
                 </ClickAwayListener>
               </Paper>
@@ -89,3 +118,14 @@ export default function MenuListComposition() {
     </div>
   );
 }
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+  },
+  paper: {
+    marginRight: theme.spacing(2),
+  },
+}));
+
+export default UserMenu;

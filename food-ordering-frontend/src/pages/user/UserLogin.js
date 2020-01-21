@@ -16,7 +16,7 @@ import { navigate, Link as RouterLink } from "@reach/router";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { authStore } from "../../store/AuthStore";
 import {apiUrl} from "../../App";
-
+import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 const UserLogin = (props) => {
   const classes = useStyles();
 
@@ -110,6 +110,7 @@ const UserLogin = (props) => {
           <Typography className={classes.successfulRegistration} gutterBottom>
               Registration successful. Please login.
           </Typography>}
+          <ServerErrorMessage error={serverError}/>
           {loading && <CircularProgress />}
           <form className={classes.form} validate="true" onSubmit={handleLogin}>
             <TextField
