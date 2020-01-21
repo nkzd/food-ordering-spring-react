@@ -22,6 +22,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -98,6 +99,28 @@ public class AppUserController {
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = apiConfig.getTokenPrefix() + jwtTokenProvider.generateToken(authentication);
+
+		AppUser appUser = (AppUser) authentication.getPrincipal();
+		if(!appUser.getRole().equals("USER"))
+			throw new UsernameNotFoundException("User not found");
+		
+		return new ResponseEntity<JwtLoginSuccessResponse>(new JwtLoginSuccessResponse(jwt), HttpStatus.OK);
+	}
+	
+	@PostMapping("/adminlogin")
+	public ResponseEntity<?> adminLogin(@Valid @RequestBody LoginRequest loginRequest, BindingResult result) {
+		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+		if (errorMap != null)
+			return errorMap;
+
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		String jwt = apiConfig.getTokenPrefix() + jwtTokenProvider.generateToken(authentication);
+		
+		AppUser appUser = (AppUser) authentication.getPrincipal();
+		if(!appUser.getRole().equals("ADMIN"))
+			throw new UsernameNotFoundException("User not found");
 
 		return new ResponseEntity<JwtLoginSuccessResponse>(new JwtLoginSuccessResponse(jwt), HttpStatus.OK);
 	}

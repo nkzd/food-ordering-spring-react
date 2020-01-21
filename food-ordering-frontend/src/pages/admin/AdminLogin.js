@@ -46,7 +46,7 @@ const Login = (props) => {
   const handleLogin = event => {
     event.preventDefault();
     setLoading(true);
-    fetch(`${apiUrl}/api/user/login`, {
+    fetch(`${apiUrl}/api/user/adminlogin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
