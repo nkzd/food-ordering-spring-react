@@ -1,21 +1,16 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import ShoppingBasketRoundedIcon from '@material-ui/icons/ShoppingBasketRounded';
 import { Typography } from '@material-ui/core';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
-import ShoppingBasketOutlinedIcon from '@material-ui/icons/ShoppingBasketOutlined';
-import ShoppingBasketTwoToneIcon from '@material-ui/icons/ShoppingBasketTwoTone';
-import Icon from '@material-ui/core/Icon';
-import SvgIcon from '@material-ui/core/SvgIcon';
-
-import BasketImage from "../../images/bag.png"
-const Basket = () => {
+import Divider from "@material-ui/core/Divider";
+import BasketImage from "../../images/farm-products.png"
+import BasketItem from "./BasketItem";
+const Basket = ({basketState}) => {
 
     const classes = useStyles();
     const preventDefault = event => event.preventDefault();
@@ -35,13 +30,14 @@ const Basket = () => {
                 Change address
             </Link> 
             <br/>
+                <ConditionalIcon basketState={basketState}/>
             <br/>
-            <Typography align="center" variant="h6" gutterBottom>
-            {/* <ShoppingBasketTwoToneIcon style={{ fontSize: 80 }} /> */}
-            {/* <Icon className="fa fa-plus-circle" /> */}
-                <img src={BasketImage} alt="basket"/>
-            
-            </Typography>
+            {
+                (basketState.length>0) && (
+                    <BasketItem/>
+                )
+            }
+            <br/>
             <Typography align="center" variant="body1">
                 <Button variant="contained" >
                     Submit
@@ -51,6 +47,19 @@ const Basket = () => {
     )
 }
 
+const ConditionalIcon = ({basketState}) => {
+    if(basketState.length==0)
+    { 
+        return(
+            <Typography align="center" variant="h6" gutterBottom>
+            <img src={BasketImage} alt="basket"/>
+            </Typography>
+        )
+    }else{
+        return(null);
+    }
+}
+
 const useStyles = makeStyles(theme => ({
     root: {
         padding: theme.spacing(2)
@@ -58,3 +67,5 @@ const useStyles = makeStyles(theme => ({
   }));
 
   export default Basket;
+
+//Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>

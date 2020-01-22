@@ -64,32 +64,27 @@ const UserRestaurants = () => {
       <Container maxWidth="md">
       <Paper className={classes.hero}>
       {/* <div className={classes.overlay} /> */}
-      <Grid container className={classes.gridRoot}>
-        <Grid item
-        container
-        direction="row"
-        justify="space-between"
-        alignItems="flex-start"
-        maxwidth="md"
-        >
-          <Grid item
-          container
-          direction="column"
+      <Grid container className={classes.gridRoot}
+          direction="row"
           justify="space-between"
           alignItems="flex-start"
-          xs
           >
-            <Grid item className={classes.heroElement}>
-              <Typography component="h1" variant="h5" color="inherit" gutterBottom>
-                <FastfoodRoundedIcon/> Logo
-              </Typography>
+              <Grid item container direction="row"
+                justify="space-between"
+                alignItems="flex-start"
+              >
+                <Grid item className={classes.heroElement}>
+                  <Typography component="h1" variant="h5" color="inherit" gutterBottom>
+                    <FastfoodRoundedIcon/> Logo
+                  </Typography>
+                </Grid>
+                <Grid item className={classes.heroElement}>
+                  <UserMenu/>
+                </Grid>
             </Grid>
+            <Grid item>
+            </Grid>    
           </Grid>
-          <Grid item className={classes.heroElement}>
-              <UserMenu/>
-          </Grid>
-        </Grid>
-      </Grid>
       </Paper>
       </Container>
 

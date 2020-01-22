@@ -42,7 +42,7 @@ const RestaurantCard = ({name,pictureUrl,address,id}) => {
                   );
                 }}
                 >
-                    Visit Restaurant
+                    View Restaurant
                 </Button>
             </Grid>
                 

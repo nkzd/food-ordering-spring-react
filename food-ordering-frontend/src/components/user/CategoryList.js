@@ -5,7 +5,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-const CategoryList = () => {
+const CategoryList = ({categories, handleCategoryScroll}) => {
     const classes = useStyles();
 
     return (
@@ -16,15 +16,13 @@ const CategoryList = () => {
               Categories
             </ListSubheader>
           }>
-            <ListItem button>
-              <ListItemText primary="Spagete" />
-            </ListItem>
-            <ListItem button>
-              <ListItemText primary="Pizza" />
-            </ListItem>
-            <ListItem button>
-              <ListItemText primary="Akcija" />
-            </ListItem>
+            {categories.map((category)=>{
+              if(category.foodArticles.length>0)
+              return(
+              <ListItem button key={category.id} onClick={()=>{handleCategoryScroll(category.id)}}>
+                <ListItemText primary={category.name} />
+              </ListItem>
+            )})}
           </List>
         </div>
       );

@@ -65,7 +65,6 @@ public class AppUserController {
 		if (errorMap != null)
 			return errorMap;
 
-		// provjera passworda
 		appUserValidator.validate(user, result);
 		
 		errorMap = mapValidationErrorService.MapValidationService(result);
