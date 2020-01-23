@@ -54,9 +54,17 @@ public class RestaurantService {
 		return restaurant.get();
 	}
 
+	public Restaurant findRestaurantById(String restaurantId) {
+		Optional<Restaurant> restaurant = restaurantRepository.findById(Long.parseLong(restaurantId));
+		
+		if (!restaurant.isPresent()) {
+			throw new IdException("Restaurant ID " + restaurantId + " does not exist");
+		}
+		return restaurant.get();
+	}
+	
 	public Restaurant saveOrUpdateRestaurant(Restaurant restaurant, String username) {
 
-		// update postavi email i ime
 		if (restaurant.getId() != null) {
 			Optional<Restaurant> existingRestaurant = restaurantRepository.findById(restaurant.getId());
 			if (!existingRestaurant.isPresent()) {
@@ -127,4 +135,5 @@ public class RestaurantService {
 		}
 
 	}
+
 }

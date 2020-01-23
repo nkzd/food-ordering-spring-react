@@ -32,7 +32,7 @@ const App = () => {
         <ProtectedRoute 
         component={UserRestaurant} 
         authRequired="user" 
-        path="/restaurant" 
+        path="/restaurants/:restaurantId" 
         />
         <ProtectedRoute 
         component={UserRestaurants} 

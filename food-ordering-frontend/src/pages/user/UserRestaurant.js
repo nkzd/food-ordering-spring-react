@@ -1,61 +1,118 @@
-import React from 'react';
+import React,{useContext, useState, useEffect} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from "@material-ui/core/styles";
 import waiterImage from "../../images/waiter.jpg";
-import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import RestaurantCard from "../../components/user/RestaurantCard"
-import Search from "../../components/user/Search"
 import FoodArticleList from "../../components/user/FoodArticleList"
 import CategoryList from "../../components/user/CategoryList"
 import Basket from "../../components/user/Basket"
 import UserMenu from "../../components/user/UserMenu"
 import FastfoodRoundedIcon from '@material-ui/icons/FastfoodRounded';
-const UserRestaurant = () => {
-    const classes = useStyles();
+import {apiUrl} from "../../App";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
+import { authStore } from "../../store/AuthStore";
+import { navigate } from "@reach/router";
+
+const UserRestaurant = ({restaurantId}) => {
+  const classes = useStyles();
+  const authContext = useContext(authStore);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState({ categories: [] });
+  const [serverError, setServerError] = useState(false);
+  const [refs,setRefs] = useState([])
+  //tipa [ {itemId: 1, foodArticle:{}, quantity: 2}, {itemId: 2, foodArticle:{}, quantity: 1}...]
+  const [basketState, setBasketState] = useState([]);
+  const [basketItemId, setBasketItemId]=useState(0);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`${apiUrl}/api/restaurant/${restaurantId}/category/all`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authContext.state.userState.token
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw response;
+      }
+      return response.json(); 
+    })
+    .then(json => {
+      setLoading(false);
+      setServerError(false);
+      //create refs for categories
+      let refArray = json.reduce((acc, value) => {
+        acc[value.id] = React.createRef();
+        return acc;
+      }, {});
+      setRefs(refArray);
+      setData({...data,categories: json});
+
+    })
+    .catch(err => {
+      if (err.text) {
+        setLoading(false);
+        authContext.dispatch({type: "userLogout"});
+        navigate("/login/");
+      } else {
+        setLoading(false);
+        setServerError(true);
+      }
+    });
+  }, []);
+
+  const handleCategoryScroll = id =>
+    refs[id].current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+  });
+
+  //add and remove from basket. 
+
+  const handleBasketAdd = (foodArticle) => {
+    setBasketItemId(basketItemId+1);
+    setBasketState([...basketState, {itemId: basketItemId, foodArticle: foodArticle, quantity: 1}])
+  }
 
   return (
     <React.Fragment>
       <CssBaseline />
 
       <Container maxWidth="md">
-      <Paper className={classes.hero}>
-      {/* <div className={classes.overlay} /> */}
-      <Grid container className={classes.gridRoot}>
-        <Grid item
-        container
-        direction="row"
-        justify="space-between"
-        alignItems="flex-start"
-        maxwidth="md"
-        >
-          <Grid item
-          container
-          direction="column"
+        <Paper className={classes.hero}>
+
+          <Grid container className={classes.gridRoot}
+          direction="row"
           justify="space-between"
           alignItems="flex-start"
-          xs
           >
-            <Grid item className={classes.heroElement}>
-              <Typography component="h1" variant="h5" color="inherit" gutterBottom>
-                <FastfoodRoundedIcon/> Logo
-              </Typography>
+              <Grid item container direction="row"
+                justify="space-between"
+                alignItems="flex-start"
+              >
+                <Grid item className={classes.heroElement}>
+                  <Typography component="h1" variant="h5" color="inherit" gutterBottom>
+                    <FastfoodRoundedIcon/> Logo
+                  </Typography>
+                </Grid>
+                <Grid item className={classes.heroElement}>
+                  <UserMenu handleAdd/>
+                </Grid>
             </Grid>
+            <Grid item>
+            </Grid>    
           </Grid>
-          <Grid item className={classes.heroElement}>
-              <UserMenu/>
-          </Grid>
-        </Grid>
-      </Grid>
-      </Paper>
+        </Paper>
       </Container>
 
       
       <br/>
-      {/* {backgroundColor: "MintCream",} */}
       <Container style={{ height: "70vh"}}>
         <Grid container
           direction="row"
@@ -63,14 +120,19 @@ const UserRestaurant = () => {
           alignItems="flex-start"
           spacing={2}
         >
+          <Grid container justify = "center">
+              {loading && <CircularProgress />}
+            </Grid>
+          <ServerErrorMessage error={serverError}/>
+
           <Grid item xs={2}>
-           <CategoryList/>
+           <CategoryList categories={data.categories} handleCategoryScroll={handleCategoryScroll}/>
           </Grid>
           <Grid item xs={6}>
-            <FoodArticleList/>
+            <FoodArticleList categories={data.categories} restaurantId={restaurantId} refs={refs} handleBasketAdd={handleBasketAdd}/>
           </Grid>
           <Grid item xs={3}>
-           <Basket/>
+           <Basket basketState={basketState} setBasketState={setBasketState} />
           </Grid>
         </Grid>
 
@@ -78,6 +140,7 @@ const UserRestaurant = () => {
     </React.Fragment>
   );
 }
+
 
 const useStyles = makeStyles(theme => ({
     gridRoot: {
@@ -105,8 +168,14 @@ const useStyles = makeStyles(theme => ({
       margin: theme.spacing(3)
     },
     paper: {
-        height: 300,
-        width: 180,
+        margin: theme.spacing(1),
+        height: 100,
+        width: 300,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    },
+    restaurantName:{
+      textAlign:"center",
+       marginBottom: theme.spacing(1)
     }
   }));
 
