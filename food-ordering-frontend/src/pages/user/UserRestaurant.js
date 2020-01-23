@@ -24,8 +24,9 @@ const UserRestaurant = ({restaurantId}) => {
   const [data, setData] = useState({ categories: [] });
   const [serverError, setServerError] = useState(false);
   const [refs,setRefs] = useState([])
-  //tipa [ {article:{}, broj: 2}, {article:{}, broj: 1}...]
+  //tipa [ {itemId: 1, foodArticle:{}, quantity: 2}, {itemId: 2, foodArticle:{}, quantity: 1}...]
   const [basketState, setBasketState] = useState([]);
+  const [basketItemId, setBasketItemId]=useState(0);
 
   useEffect(() => {
     setLoading(true);
@@ -72,9 +73,13 @@ const UserRestaurant = ({restaurantId}) => {
       block: 'start',
   });
 
+  //add and remove from basket. 
+
   const handleBasketAdd = (foodArticle) => {
-    setBasketState([...basketState, {foodArticle: foodArticle, quantity: 1}])
+    setBasketItemId(basketItemId+1);
+    setBasketState([...basketState, {itemId: basketItemId, foodArticle: foodArticle, quantity: 1}])
   }
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -127,7 +132,7 @@ const UserRestaurant = ({restaurantId}) => {
             <FoodArticleList categories={data.categories} restaurantId={restaurantId} refs={refs} handleBasketAdd={handleBasketAdd}/>
           </Grid>
           <Grid item xs={3}>
-           <Basket basketState={basketState}/>
+           <Basket basketState={basketState} setBasketState={setBasketState} />
           </Grid>
         </Grid>
 
@@ -135,6 +140,7 @@ const UserRestaurant = ({restaurantId}) => {
     </React.Fragment>
   );
 }
+
 
 const useStyles = makeStyles(theme => ({
     gridRoot: {

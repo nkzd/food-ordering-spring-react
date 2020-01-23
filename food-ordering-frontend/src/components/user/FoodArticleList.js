@@ -84,20 +84,13 @@ const FoodArticleList = ({ categories, restaurantId, refs, handleBasketAdd }) =>
                 <hr />
                 <div>
                   {category.foodArticles.map((foodArticle, i, arr) => {
-                    if (arr.length - 1 === i) {
-                      return (
-                        <div tabIndex={0}  role="button" key={foodArticle.id} onClick={()=>{handleBasketAdd(foodArticle)}} onKeyDown={()=>{handleBasketAdd(foodArticle)}}>
-                          <FoodArticleCard foodArticle={foodArticle} />
-                        </div>
-                      );
-                    } else {
-                      return (
-                        <div tabIndex={0} role="button" key={foodArticle.id} onClick={()=>{handleBasketAdd(foodArticle)}} onKeyDown={()=>{handleBasketAdd(foodArticle)}}>
-                          <FoodArticleCard foodArticle={foodArticle} />
-                          <Divider light />
-                        </div>
-                      );
-                    }
+
+                    return (
+                      <div className={classes.removeOutline} role="button" key={foodArticle.id} onClick={()=>{handleBasketAdd(foodArticle)}} tabIndex={0} onKeyDown={()=>{handleBasketAdd(foodArticle)}}>
+                        <FoodArticleCard foodArticle={foodArticle} />
+                        {(arr.length - 1 !== i) ? <Divider light /> : null}
+                      </div>
+                    );
                   })}
                 </div>
               </div>
@@ -128,6 +121,11 @@ const useStyles = makeStyles(theme => ({
   },
   categoryName: {
     marginBottom: theme.spacing(1)
+  },
+  removeOutline:{
+    outlineStyle: "none",
+    boxShadow:"none",
+    borderColor:"transparent"
   }
 }));
 export default FoodArticleList;
