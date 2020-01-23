@@ -77,7 +77,7 @@ const FoodArticleList = ({ categories, restaurantId, refs, handleBasketAdd }) =>
           if (category.foodArticles.length > 0)
             return (
               <div key={category.id}  ref={refs[category.id]}>
-                <Typography variant="h5" className={classes.categoryName} >
+                <Typography variant="h6" className={classes.categoryName} >
                   {category.name}
                 </Typography>
                 {/* <Divider /> */}

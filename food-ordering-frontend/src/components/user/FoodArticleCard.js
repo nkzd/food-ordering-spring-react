@@ -8,23 +8,23 @@ const FoodArticleCard = ({foodArticle}) => {
     return(
             //make card clickable
             <div className={classes.article}>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="subtitle1" gutterBottom>
                     {foodArticle.name}
                 </Typography>
-                <Typography variant="body2" gutterBottom>
+                <Typography variant="body2" color="textSecondary" gutterBottom>
                     {foodArticle.description}
                 </Typography>
                 <Typography variant="subtitle2">
                     {foodArticle.price} €
                 </Typography>
-                <br/>
             </div>
     )
 }
 const useStyles = makeStyles(theme => ({
     article:{
         cursor: "pointer",
-        // marginBottom: theme.spacing(1)
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1)
     }
   }));
 export default FoodArticleCard;

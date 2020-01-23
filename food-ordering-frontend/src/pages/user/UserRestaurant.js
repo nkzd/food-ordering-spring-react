@@ -16,6 +16,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import { authStore } from "../../store/AuthStore";
 import { navigate } from "@reach/router";
+import HeroOverlay from "../../components/user/HeroOverlay";
 
 const UserRestaurant = ({restaurantId}) => {
   const classes = useStyles();
@@ -84,32 +85,7 @@ const UserRestaurant = ({restaurantId}) => {
     <React.Fragment>
       <CssBaseline />
 
-      <Container maxWidth="md">
-        <Paper className={classes.hero}>
-
-          <Grid container className={classes.gridRoot}
-          direction="row"
-          justify="space-between"
-          alignItems="flex-start"
-          >
-              <Grid item container direction="row"
-                justify="space-between"
-                alignItems="flex-start"
-              >
-                <Grid item className={classes.heroElement}>
-                  <Typography component="h1" variant="h5" color="inherit" gutterBottom>
-                    <FastfoodRoundedIcon/> Logo
-                  </Typography>
-                </Grid>
-                <Grid item className={classes.heroElement}>
-                  <UserMenu handleAdd/>
-                </Grid>
-            </Grid>
-            <Grid item>
-            </Grid>    
-          </Grid>
-        </Paper>
-      </Container>
+      <HeroOverlay/>
 
       
       <br/>
