@@ -36,6 +36,7 @@ public class Restaurant {
 	@NotBlank
 	private String address;
 	
+	@Column(length=1000)
 	private String description;
 	
 	private String pictureUrl;

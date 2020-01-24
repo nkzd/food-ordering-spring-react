@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class SinglePageAppController {
-    @RequestMapping(value = {"/", "/login", "/signup","/restaurants", "/admin/**"})
+    @RequestMapping(value = {"/", "/login", "/signup","/restaurants/**","/profile", "/admin/**"})
     public String index() {
         return "index.html";
     }

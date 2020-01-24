@@ -1,21 +1,18 @@
 import React, {useContext, useState, useEffect} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import Paper from '@material-ui/core/Paper';
 import { makeStyles } from "@material-ui/core/styles";
 import waiterImage from "../../images/waiter.jpg";
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import RestaurantCard from "../../components/user/RestaurantCard"
 import Search from "../../components/user/Search"
-import UserMenu from "../../components/user/UserMenu"
-import FastfoodRoundedIcon from '@material-ui/icons/FastfoodRounded';
 import { authStore } from "../../store/AuthStore";
 import { navigate } from "@reach/router";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {apiUrl} from "../../App";
 import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
+import HeroOverlay from "../../components/user/HeroOverlay";
 
 const UserRestaurants = () => {
   
@@ -25,7 +22,7 @@ const UserRestaurants = () => {
   const [data, setData] = useState({ restaurants: [] });
   const [serverError, setServerError] = useState(false);
   const [searchField,setSearchField] = useState("");
-  const [restaurants, setRestaurants]=useState([]);
+
   useEffect(() => {
     setLoading(true);
     fetch(`${apiUrl}/api/restaurant/all`, {
@@ -60,33 +57,8 @@ const UserRestaurants = () => {
   return (
     <React.Fragment>
       <CssBaseline />
-
-      <Container maxWidth="md">
-      <Paper className={classes.hero}>
-      {/* <div className={classes.overlay} /> */}
-      <Grid container className={classes.gridRoot}
-          direction="row"
-          justify="space-between"
-          alignItems="flex-start"
-          >
-              <Grid item container direction="row"
-                justify="space-between"
-                alignItems="flex-start"
-              >
-                <Grid item className={classes.heroElement}>
-                  <Typography component="h1" variant="h5" color="inherit" gutterBottom>
-                    <FastfoodRoundedIcon/> Logo
-                  </Typography>
-                </Grid>
-                <Grid item className={classes.heroElement}>
-                  <UserMenu/>
-                </Grid>
-            </Grid>
-            <Grid item>
-            </Grid>    
-          </Grid>
-      </Paper>
-      </Container>
+      
+      <HeroOverlay/>
 
       <Container maxWidth="md" className={classes.main}>
 

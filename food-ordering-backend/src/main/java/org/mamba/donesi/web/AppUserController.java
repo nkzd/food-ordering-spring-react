@@ -26,6 +26,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -136,6 +137,23 @@ public class AppUserController {
 		String username = principal.getName();
 		
 		AppUser appUser = appUserService.getByUsername(username);
+		UserInfo newUserInfo = userInfoService.saveOrUpdateUserInfo(appUser, userInfo);
+		
+		return new ResponseEntity<UserInfo>(newUserInfo, HttpStatus.CREATED);
+	}
+	
+	@PatchMapping("/userinfo")
+	public ResponseEntity<?> updateUserInfo(@Valid @RequestBody UserInfo userInfo, BindingResult result, Principal principal) {
+
+		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+		if (errorMap != null)
+			return errorMap;
+		
+
+		String username = principal.getName();
+		AppUser appUser = appUserService.getByUsername(username);
+		
+		userInfo.setId(appUser.getUserInfo().getId());
 		UserInfo newUserInfo = userInfoService.saveOrUpdateUserInfo(appUser, userInfo);
 		
 		return new ResponseEntity<UserInfo>(newUserInfo, HttpStatus.CREATED);
