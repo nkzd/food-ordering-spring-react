@@ -71,6 +71,13 @@ const UserMenu = ()=> {
     }
   }
 
+  const handleClickOpenProfile = event => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+    setOpen(false);
+    navigate("/profile");
+  };
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = React.useRef(open);
   React.useEffect(() => {
@@ -105,8 +112,10 @@ const UserMenu = ()=> {
             >
               <Paper>
                 <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                    <MenuItem onClick={handleClose}>Profile</MenuItem>
+                  <MenuList id="menu-list-grow" autoFocusItem={open} onKeyDown={handleListKeyDown}>
+                    <MenuItem onClick={handleClickOpenProfile}>
+                      Profile
+                    </MenuItem>
                     <MenuItem onClick={handleLogout}>Logout</MenuItem>
                   </MenuList>
                 </ClickAwayListener>

@@ -8,6 +8,14 @@ import RestaurantLogo from "../../images/restaurant-logo.png";
 import Grid from "@material-ui/core/Grid";
 import { apiUrl } from "../../App";
 import { authStore } from "../../store/AuthStore";
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 const FoodArticleList = ({ categories, restaurantId, refs, handleBasketAdd }) => {
   const classes = useStyles();
@@ -20,6 +28,27 @@ const FoodArticleList = ({ categories, restaurantId, refs, handleBasketAdd }) =>
     description: "",
     pictureUrl: ""
   });
+
+  const [orderNote,setOrderNote] = useState("");
+
+  const [selectedFoodArticle, setSelectedFoodArticle] = useState({});
+
+  const [open, setOpen] = React.useState(false);
+  
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpenDialog = (foodArticle) => {
+    setSelectedFoodArticle(foodArticle);
+    setOrderNote("");
+    setOpen(true);
+  }
+
+  const handleRequestSubmit = () => {
+    handleClose();
+    handleBasketAdd({orderNote:orderNote, foodArticle: selectedFoodArticle})
+  }
 
   useEffect(() => {
     fetch(`${apiUrl}/api/restaurant/${restaurantId}`, {
@@ -86,7 +115,7 @@ const FoodArticleList = ({ categories, restaurantId, refs, handleBasketAdd }) =>
                   {category.foodArticles.map((foodArticle, i, arr) => {
 
                     return (
-                      <div className={classes.removeOutline} role="button" key={foodArticle.id} onClick={()=>{handleBasketAdd(foodArticle)}} tabIndex={0} onKeyDown={()=>{handleBasketAdd(foodArticle)}}>
+                      <div className={classes.removeOutline} role="button" key={foodArticle.id} onClick={()=>{handleOpenDialog(foodArticle)}} tabIndex={0} onKeyDown={()=>{handleOpenDialog(foodArticle)}}>
                         <FoodArticleCard foodArticle={foodArticle} />
                         {(arr.length - 1 !== i) ? <Divider light /> : null}
                       </div>
@@ -97,7 +126,39 @@ const FoodArticleList = ({ categories, restaurantId, refs, handleBasketAdd }) =>
             );
         })}
       </div>
+      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth="md" fullWidth={true}>
+          <DialogTitle id="form-dialog-title">Add order requests</DialogTitle>
+          <DialogContent>
+            <DialogContentText className={classes.dialog}>
+              Enter special order requests if you have any.
+            </DialogContentText>
+            <TextField
+              margin="dense"
+              id="name"
+              label="order notes"
+              fullWidth
+              multiline={true}
+              rows="2"
+              value={orderNote}
+              onChange={event => {
+                setOrderNote(event.target.value);
+              }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={()=>{
+                handleRequestSubmit()
+              }} 
+              color="primary">
+              Add
+            </Button>
+          </DialogActions>
+        </Dialog>
     </Paper>
+    
   );
 };
 const useStyles = makeStyles(theme => ({

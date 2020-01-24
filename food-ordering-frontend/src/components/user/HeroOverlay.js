@@ -10,7 +10,6 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const HeroOverlay = () => {
     const classes = useStyles();
-
     return(
         <Container maxWidth="md">
         <Paper className={classes.hero}>
@@ -56,26 +55,8 @@ const useStyles = makeStyles(theme => ({
         height: "30vh"
         
     },
-    overlay: {
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      right: 0,
-      left: 0,
-      backgroundColor: 'rgba(0,0,0,.2)',
-    },
     heroElement: {
       margin: theme.spacing(3)
-    },
-    paper: {
-        margin: theme.spacing(1),
-        height: 100,
-        width: 300,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)'
-    },
-    restaurantName:{
-      textAlign:"center",
-       marginBottom: theme.spacing(1)
     }
   }));
 

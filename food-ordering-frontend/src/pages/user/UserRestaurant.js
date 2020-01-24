@@ -1,22 +1,19 @@
 import React,{useContext, useState, useEffect} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import Paper from '@material-ui/core/Paper';
 import { makeStyles } from "@material-ui/core/styles";
 import waiterImage from "../../images/waiter.jpg";
 import Grid from '@material-ui/core/Grid';
 import FoodArticleList from "../../components/user/FoodArticleList"
 import CategoryList from "../../components/user/CategoryList"
 import Basket from "../../components/user/Basket"
-import UserMenu from "../../components/user/UserMenu"
-import FastfoodRoundedIcon from '@material-ui/icons/FastfoodRounded';
 import {apiUrl} from "../../App";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import { authStore } from "../../store/AuthStore";
 import { navigate } from "@reach/router";
 import HeroOverlay from "../../components/user/HeroOverlay";
+
 
 const UserRestaurant = ({restaurantId}) => {
   const classes = useStyles();
@@ -28,6 +25,8 @@ const UserRestaurant = ({restaurantId}) => {
   //tipa [ {itemId: 1, foodArticle:{}, quantity: 2}, {itemId: 2, foodArticle:{}, quantity: 1}...]
   const [basketState, setBasketState] = useState([]);
   const [basketItemId, setBasketItemId]=useState(0);
+
+
 
   useEffect(() => {
     setLoading(true);
@@ -76,9 +75,10 @@ const UserRestaurant = ({restaurantId}) => {
 
   //add and remove from basket. 
 
-  const handleBasketAdd = (foodArticle) => {
+  const handleBasketAdd = (foodArticleAndNote) => {
+    //add note
     setBasketItemId(basketItemId+1);
-    setBasketState([...basketState, {itemId: basketItemId, foodArticle: foodArticle, quantity: 1}])
+    setBasketState([...basketState, {itemId: basketItemId, foodArticle: foodArticleAndNote.foodArticle, quantity: 1, orderNote: foodArticleAndNote.orderNote}])
   }
 
   return (

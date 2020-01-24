@@ -14,6 +14,7 @@ import UserLogin from "./pages/user/UserLogin";
 import UserSignup from "./pages/user/UserSignup";
 import UserRestaurants from "./pages/user/UserRestaurants";
 import UserRestaurant from "./pages/user/UserRestaurant";
+import UserProfile from "./pages/user/UserProfile";
 
 import { PublicRoute, ProtectedRoute } from "./Routes";
 const App = () => {
@@ -38,6 +39,11 @@ const App = () => {
         component={UserRestaurants} 
         authRequired="user" 
         path="/" 
+        />
+        <ProtectedRoute 
+        component={UserProfile} 
+        authRequired="user" 
+        path="/profile" 
         />
 
         <PublicRoute component={AdminSignup} path="/admin/signup" />

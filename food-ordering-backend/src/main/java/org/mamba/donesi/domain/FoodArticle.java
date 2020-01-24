@@ -34,6 +34,7 @@ public class FoodArticle {
 	@Positive(message="Price has to be positive")
 	private Double price;
 	
+	@Column(length=1000)
 	private String description;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
