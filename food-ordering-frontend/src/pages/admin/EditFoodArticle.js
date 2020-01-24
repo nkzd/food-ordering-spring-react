@@ -131,18 +131,17 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
         navigate(`/admin/restaurants/${restaurantId}`);
       })
       .catch(err => {
+        setLoading(false);
         if (err.text) {
           err.text().then(errorMessage => {
             
             const errObj = JSON.parse(errorMessage);
-            setLoading(false);
             setFieldErrors({
               ...initialFields,
               ...errObj
             });
           });
         } else {
-          setLoading(false);
           setServerError(true);
           setFieldErrors(initialFields);
         }
@@ -237,6 +236,7 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={loading}
           >
             Submit
           </Button>

@@ -1,8 +1,7 @@
-import React,{useState} from 'react';
+import React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import Divider from "@material-ui/core/Divider";
 import ClearIcon from '@material-ui/icons/Clear';
 import IconButton from '@material-ui/core/IconButton';
@@ -85,26 +84,23 @@ const BasketItem = ({basketItem, handleBasketRemove, incrementItemQuantity, decr
 }
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        padding: theme.spacing(2)
-      },
-      firstRow: {
-          marginTop:theme.spacing(1),
-          marginBottom:theme.spacing(1)
-      },
-      secondRow: {
+    firstRow: {
         marginTop:theme.spacing(1),
         marginBottom:theme.spacing(1)
-      },
-      numberOfArticlesText: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
+    },
+    secondRow: {
+    marginTop:theme.spacing(1),
+    marginBottom:theme.spacing(1)
+    },
+    numberOfArticlesText: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
 
-      },
-      foodArticleName: {
-          marginTop: 3,
-          marginLeft: 6
-      }
+    },
+    foodArticleName: {
+        marginTop: 3,
+        marginLeft: 6
+    }
 }));
 
 export default BasketItem;

@@ -71,7 +71,7 @@ const FoodArticleList = ({ categories, restaurantId, refs, handleBasketAdd }) =>
         //handled by other component
       });
   }, []);
-  //kasnije preuzmi info od restorana
+
   return (
     <Paper className={classes.paper}>
       <div>
@@ -126,7 +126,7 @@ const FoodArticleList = ({ categories, restaurantId, refs, handleBasketAdd }) =>
             );
         })}
       </div>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth="md" fullWidth={true}>
+      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-add-request" maxWidth="sm" fullWidth={true}>
           <DialogTitle id="form-dialog-title">Add order requests</DialogTitle>
           <DialogContent>
             <DialogContentText className={classes.dialog}>
@@ -165,7 +165,6 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(4)
   },
-  restaurantName: {},
   address: {
     marginBottom: theme.spacing(4)
   },

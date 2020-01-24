@@ -59,10 +59,10 @@ const RestaurantDeleteDialog = ({deleteId, refresh, type, restaurantId}) => {
       <Dialog
         open={open}
         onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
+        aria-labelledby="alert-dialog-delete"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Delete "+((type==="restaurant") ? "restaurant" : "food article")+"?"}</DialogTitle>
+        <DialogTitle id="alert-dialog-delete">{"Delete "+((type==="restaurant") ? "restaurant" : "food article")+"?"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
            {"This action can't be undone"}

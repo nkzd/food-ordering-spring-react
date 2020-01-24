@@ -78,14 +78,13 @@ const Login = (props) => {
         navigate("/admin/");
       })
       .catch(err => {
+        setLoading(false);
         if (err.text) {
-            setLoading(false);
             setFieldErrors({
               ...initialFields,
               username: "The username or password you have entered is invalid."
           });
         } else {
-          setLoading(false);
           setServerError(true);
           setFieldErrors(initialFields);
         }
@@ -161,6 +160,7 @@ const Login = (props) => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={loading}
           >
             Sign In
           </Button>

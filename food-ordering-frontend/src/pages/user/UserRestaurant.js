@@ -1,8 +1,6 @@
 import React,{useContext, useState, useEffect} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
-import { makeStyles } from "@material-ui/core/styles";
-import waiterImage from "../../images/waiter.jpg";
 import Grid from '@material-ui/core/Grid';
 import FoodArticleList from "../../components/user/FoodArticleList"
 import CategoryList from "../../components/user/CategoryList"
@@ -16,7 +14,6 @@ import HeroOverlay from "../../components/user/HeroOverlay";
 
 
 const UserRestaurant = ({restaurantId}) => {
-  const classes = useStyles();
   const authContext = useContext(authStore);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({ categories: [] });
@@ -84,10 +81,7 @@ const UserRestaurant = ({restaurantId}) => {
   return (
     <React.Fragment>
       <CssBaseline />
-
       <HeroOverlay/>
-
-      
       <br/>
       <Container style={{ height: "70vh"}}>
         <Grid container
@@ -116,43 +110,5 @@ const UserRestaurant = ({restaurantId}) => {
     </React.Fragment>
   );
 }
-
-
-const useStyles = makeStyles(theme => ({
-    gridRoot: {
-      flexGrow: 1,
-      height:"100%"
-    },
-    hero: {
-        backgroundImage: `url(${waiterImage})`,
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-        color: theme.palette.common.white,
-        height: "30vh"
-        
-    },
-    overlay: {
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      right: 0,
-      left: 0,
-      backgroundColor: 'rgba(0,0,0,.2)',
-    },
-    heroElement: {
-      margin: theme.spacing(3)
-    },
-    paper: {
-        margin: theme.spacing(1),
-        height: 100,
-        width: 300,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)'
-    },
-    restaurantName:{
-      textAlign:"center",
-       marginBottom: theme.spacing(1)
-    }
-  }));
 
   export default UserRestaurant;

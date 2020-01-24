@@ -96,44 +96,8 @@ const UserRestaurants = () => {
 }
 
 const useStyles = makeStyles(theme => ({
-    gridRoot: {
-      flexGrow: 1,
-      height:"100%"
-    },
-    hero: {
-        backgroundImage: `url(${waiterImage})`,
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-        color: theme.palette.common.white,
-        height: "30vh",
-        position: 'relative',
-        
-    },
     main: {
       height: "80vh"
-    },
-    search: {
-      backgroundColor:"#ffffff"
-    },
-    overlay: {
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      right: 0,
-      left: 0,
-      backgroundColor: 'rgba(0,0,0,.2)',
-    },
-    mainFeaturedPostContent: {
-      position: 'relative',
-      padding: theme.spacing(3),
-      [theme.breakpoints.up('md')]: {
-        padding: theme.spacing(6),
-        paddingRight: 0,
-      },
-    },
-    heroElement: {
-      margin: theme.spacing(3)
     }
   }));
 

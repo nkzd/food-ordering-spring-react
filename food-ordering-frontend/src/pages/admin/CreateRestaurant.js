@@ -58,17 +58,16 @@ const CreateRestaurant = () => {
         navigate("/admin/restaurants/");
       })
       .catch(err => {
+        setLoading(false);
         if (err.text) {
           err.text().then(errorMessage => {
             const errObj = JSON.parse(errorMessage);
-            setLoading(false);
             setFieldErrors({
               ...initialFields,
               ...errObj
             });
           });
         } else {
-          setLoading(false);
           setFieldErrors(initialFields);
           setServerError(true);
         }
@@ -182,6 +181,7 @@ const CreateRestaurant = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={loading}
           >
             Submit
           </Button>

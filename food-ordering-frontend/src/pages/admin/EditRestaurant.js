@@ -231,6 +231,7 @@ const EditRestaurant = (props) => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={loading}
           >
             Submit
           </Button>

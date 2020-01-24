@@ -2,7 +2,6 @@ import React,{useContext, useState, useEffect} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from "@material-ui/core/styles";
-import waiterImage from "../../images/waiter.jpg";
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
@@ -77,8 +76,8 @@ const UserProfile = () => {
           navigate("/restaurants");
         })
         .catch(err => {
+          setLoading(false);
           if (err.text) {
-            setLoading(false);
             err.text().then(errorMessage => {
               const errObj = JSON.parse(errorMessage);
               setFieldErrors({ ...initialFields, ...errObj });
@@ -167,6 +166,7 @@ const UserProfile = () => {
                             variant="contained"
                             color="primary"
                             className={classes.submit}
+                            disabled={loading}
                             >
                             Update details
                             </Button>
@@ -180,10 +180,6 @@ const UserProfile = () => {
 } 
 
 const useStyles = makeStyles(theme => ({
-    gridRoot: {
-      flexGrow: 1,
-      height:"100%"
-    },
     paper: {
         padding: theme.spacing(3)
     },

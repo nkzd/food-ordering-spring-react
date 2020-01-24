@@ -56,9 +56,9 @@ const AddCategoryDialog = ({restaurantId, refresh}) => {
               onClose={() => {
                 setOpen(false);
               }}
-              aria-labelledby="form-dialog-title"
+              aria-labelledby="form-dialog-add-category"
             >
-              <DialogTitle id="form-dialog-title">New category</DialogTitle>
+              <DialogTitle id="form-dialog-add-category">New category</DialogTitle>
               <DialogContent>
                 <DialogContentText>
                   To add new food category, please enter category name here.

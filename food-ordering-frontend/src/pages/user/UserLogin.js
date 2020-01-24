@@ -122,7 +122,6 @@ const UserLogin = (props) => {
               label="Email Address"
               name="email"
               autoComplete="email"
-              autoFocus
               value={fields.username}
               onChange={event => {
                 setFields({ ...fields, username: event.target.value });
@@ -160,6 +159,7 @@ const UserLogin = (props) => {
               variant="contained"
               color="primary"
               className={classes.submit}
+              disabled={loading}
             >
               Sign In
             </Button>

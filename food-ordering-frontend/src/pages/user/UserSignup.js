@@ -18,6 +18,7 @@ const UserSignup = () => {
   const classes = useStyles();
 
   const [serverError, setServerError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const initialFields = {
     username: "",
@@ -32,6 +33,7 @@ const UserSignup = () => {
 
   const handleRegister = (event) => {
     event.preventDefault();
+    setLoading(true);
     fetch(`${apiUrl}/api/user/register`, {
       method: "POST",
       headers: {
@@ -53,14 +55,15 @@ const UserSignup = () => {
       if (!response.ok) {
         throw response;
       }
+      setLoading(false);
       setFieldErrors(initialFields);
       navigate("/login",{ state: { sucReg: true }});
     })
     .catch(err => {
+      setLoading(false);
       if (err.text) {
         err.text().then(errorMessage => {
           const errObj = JSON.parse(errorMessage);
-
           setFieldErrors({ ...initialFields, ...errObj });
         });
       } else {
@@ -197,6 +200,7 @@ const UserSignup = () => {
               variant="contained"
               color="primary"
               className={classes.submit}
+              disabled={loading}
             >
               Sign Up
             </Button>
