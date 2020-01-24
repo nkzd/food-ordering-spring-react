@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, {useState, useContext} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
@@ -8,8 +8,44 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Button from '@material-ui/core/Button';
 import BasketImage from "../../images/farm-products.png"
 import BasketItem from "./BasketItem";
+import {apiUrl} from "../../App";
+import {authStore} from "../../store/AuthStore"
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
 const Basket = ({basketState, setBasketState}) => {
     const classes = useStyles();
+    const authContext = useContext(authStore);
+    const [openSnack, setOpenSnack] = React.useState(false);
+    const [loading,setLoading] = useState(false);
+    const [serverError,setServerError] = useState(false);
+
+    const handleOrderSubmit = () => {
+        setLoading(true);
+        fetch(`${apiUrl}/api/order/`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": authContext.state.userState.token
+            },
+            body: JSON.stringify(basketState)
+        })
+        .then(response => {
+            if (!response.ok) {
+            throw response;
+            }
+            setServerError(false);
+            setLoading(false);
+            removeAllBasketItems();
+            setOpenSnack(true);
+        })
+        .catch(err => {
+            setServerError(true);
+            setLoading(false);
+            setOpenSnack(true);
+        });        
+    }
 
     const incrementItemQuantity = (basketItemToIncrement) => {
 
@@ -74,7 +110,16 @@ const Basket = ({basketState, setBasketState}) => {
         return totalPrice;
     }
 
+    const handleCloseSnack = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpenSnack(false);
+      };
+
     return(
+        <React.Fragment>
         <Paper className={classes.root}>
             <Typography align="center" variant="h6" gutterBottom>
                 Your Basket
@@ -98,7 +143,6 @@ const Basket = ({basketState, setBasketState}) => {
                     <img src={BasketImage} alt="basket"/>
                 </Typography>) : null
             }
-            {/*ITEMS*/}
             {
                 basketState.map((basketItem)=>{
                     return(
@@ -112,7 +156,6 @@ const Basket = ({basketState, setBasketState}) => {
                     )
                 })
             }
-            {/*RACUN*/}
             {
                 (basketState.length>0) && (
                     <Grid 
@@ -138,18 +181,34 @@ const Basket = ({basketState, setBasketState}) => {
                 )
             }
             <div align="center">
-                <Button variant="contained" className={classes.submitButton} color="primary">
+                <Button variant="contained" className={classes.submitButton} color="primary" onClick={()=>{handleOrderSubmit()}} disabled={loading}>
                     Submit
                 </Button>
             </div>
             <div align="center">
-                {(basketState.length===0) ? null : ( <Button onClick={()=>{removeAllBasketItems()}} size="small" color="secondary">Clear basket</Button>)}
+                {(basketState.length===0) ? null : ( <Button onClick={()=>{removeAllBasketItems()}} size="small" color="secondary" disabled={loading}>Clear basket</Button>)}
             </div>
         </Paper>
-        
+        <Snackbar
+            anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+            }}
+            open={openSnack}
+            autoHideDuration={6000}
+            onClose={handleCloseSnack}
+            message={(!serverError) ? "Order processed successfully!" : "Server error, please try again!"}
+            action={
+            <React.Fragment>
+                <IconButton size="small" aria-label="close" color="inherit" onClick={handleCloseSnack}>
+                <CloseIcon fontSize="small" />
+                </IconButton>
+            </React.Fragment>
+                }
+            />
+        </React.Fragment>
     )
 }
-
 const useStyles = makeStyles(theme => ({
     root: {
         padding: theme.spacing(2)
@@ -166,5 +225,3 @@ const useStyles = makeStyles(theme => ({
   }));
 
   export default Basket;
-
-//Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>

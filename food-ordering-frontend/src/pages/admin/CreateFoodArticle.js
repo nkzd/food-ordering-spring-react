@@ -70,7 +70,6 @@ const CreateFoodArticle = ({restaurantId}) =>  {
   }, []);
 
   const handleAddArticle = () => {
-    event.preventDefault();
     if(articleFields.categoryIdentifier==="")
     {
       setFieldErrors({categoryIdentifier:"Category is required"});

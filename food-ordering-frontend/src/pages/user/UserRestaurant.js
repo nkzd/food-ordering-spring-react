@@ -11,7 +11,7 @@ import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import { authStore } from "../../store/AuthStore";
 import { navigate } from "@reach/router";
 import HeroOverlay from "../../components/user/HeroOverlay";
-
+import Footer from "../../components/user/Footer";
 
 const UserRestaurant = ({restaurantId}) => {
   const authContext = useContext(authStore);
@@ -105,7 +105,7 @@ const UserRestaurant = ({restaurantId}) => {
            <Basket basketState={basketState} setBasketState={setBasketState} />
           </Grid>
         </Grid>
-
+        <Footer/>
       </Container>
     </React.Fragment>
   );

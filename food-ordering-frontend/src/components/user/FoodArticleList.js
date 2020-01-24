@@ -109,7 +109,6 @@ const FoodArticleList = ({ categories, restaurantId, refs, handleBasketAdd }) =>
                 <Typography variant="h6" className={classes.categoryName} >
                   {category.name}
                 </Typography>
-                {/* <Divider /> */}
                 <hr />
                 <div>
                   {category.foodArticles.map((foodArticle, i, arr) => {
@@ -127,18 +126,16 @@ const FoodArticleList = ({ categories, restaurantId, refs, handleBasketAdd }) =>
         })}
       </div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-add-request" maxWidth="sm" fullWidth={true}>
-          <DialogTitle id="form-dialog-title">Add order requests</DialogTitle>
+          <DialogTitle id="form-dialog-title">Add order</DialogTitle>
           <DialogContent>
             <DialogContentText className={classes.dialog}>
-              Enter special order requests if you have any.
+              Enter special requests if you have any.
             </DialogContentText>
             <TextField
               margin="dense"
               id="name"
-              label="order notes"
               fullWidth
               multiline={true}
-              rows="2"
               value={orderNote}
               onChange={event => {
                 setOrderNote(event.target.value);

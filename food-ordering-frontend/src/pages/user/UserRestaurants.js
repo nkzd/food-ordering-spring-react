@@ -2,7 +2,6 @@ import React, {useContext, useState, useEffect} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from "@material-ui/core/styles";
-import waiterImage from "../../images/waiter.jpg";
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import RestaurantCard from "../../components/user/RestaurantCard"
@@ -13,6 +12,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {apiUrl} from "../../App";
 import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import HeroOverlay from "../../components/user/HeroOverlay";
+import Footer from "../../components/user/Footer";
 
 const UserRestaurants = () => {
   
@@ -90,7 +90,9 @@ const UserRestaurants = () => {
             <RestaurantCard key={restaurant.id} name={restaurant.name} address={restaurant.address} pictureUrl={restaurant.pictureUrl} id={restaurant.id}/>
           ))
         }
+        <Footer/>
       </Container>
+
     </React.Fragment>
   );
 }
