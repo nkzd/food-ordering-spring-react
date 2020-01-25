@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import Link from '@material-ui/core/Link';
 const Footer = () => {
   const classes = useStyles();
   return (
@@ -11,8 +12,8 @@ const Footer = () => {
         color="textSecondary"
         component="p"
       >
-        Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a><br/>
-        Source code available at <a href="https://github.com/nkzd/food-ordering-spring-react" title="github-link"> GitHub</a>
+        Icons made by <Link href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</Link> from <Link href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</Link><br/>
+        Source code available at <Link href="https://github.com/nkzd/food-ordering-spring-react" title="github-link"> GitHub</Link>
       </Typography>
     </footer>
   );

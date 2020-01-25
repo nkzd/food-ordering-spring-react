@@ -17,6 +17,7 @@ import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import DeleteDialog from "../../components/admin/DeleteDialog";
 import {apiUrl} from "../../App";
+import Footer from "../../components/user/Footer";
 
 const Restaurants = () => {
   const authContext = useContext(authStore);
@@ -127,6 +128,7 @@ const Restaurants = () => {
               </Grid>
             ))}
           </Grid>
+          <Footer/>
         </Container>
       </main>
     </React.Fragment>

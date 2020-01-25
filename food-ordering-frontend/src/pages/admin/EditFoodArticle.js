@@ -243,7 +243,7 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
           <Grid container>
             <Grid item>
               <Link component={RouterLink} to={`/admin/restaurants/${restaurantId}/`} variant="body2">
-                {"Back to restaurant"}
+                {"< Back to restaurant"}
               </Link>
             </Grid>
           </Grid>
