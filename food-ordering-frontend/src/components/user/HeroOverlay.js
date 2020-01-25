@@ -8,6 +8,8 @@ import UserMenu from "../../components/user/UserMenu"
 import waiterImage from "../../images/waiter.jpg";
 import burgerImage from "../../images/burger.png";
 import { makeStyles } from "@material-ui/core/styles";
+import { navigate, Link as RouterLink } from "@reach/router";
+
 
 const HeroOverlay = () => {
     const classes = useStyles();
@@ -26,7 +28,7 @@ const HeroOverlay = () => {
                   justify="space-between"
                   alignItems="flex-start"
                 >
-                  <Grid item className={classes.heroElement}>
+                  <Grid item className={classes.heroElement} onClick={()=>{navigate("/")}}>
                     <Typography component="h1" variant="h5" color="inherit" gutterBottom>
                       <FastfoodRoundedIcon/> Logo
                     </Typography>
@@ -59,7 +61,8 @@ const useStyles = makeStyles(theme => ({
         
     },
     heroElement: {
-      margin: theme.spacing(3)
+      margin: theme.spacing(3),
+      cursor: "pointer"
     }
   }));
 
