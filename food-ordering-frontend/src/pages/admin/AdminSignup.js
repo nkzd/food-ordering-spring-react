@@ -11,11 +11,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Link as RouterLink, navigate } from "@reach/router";
 import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
-
+import {apiUrl} from "../../App";
+import CircularProgress from '@material-ui/core/CircularProgress';
 const SignUp = () => {
   const classes = useStyles();
   const [serverError, setServerError] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   
   const initialFields = {
     username: "",
@@ -26,7 +27,8 @@ const SignUp = () => {
   const [fieldErrors, setFieldErrors] = useState(initialFields);
 
   const handleRegister = () => {
-    fetch("http://localhost:8080/api/admin/users/register", {
+    setLoading(true);
+    fetch(`${apiUrl}/api/user/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -34,21 +36,24 @@ const SignUp = () => {
       body: JSON.stringify({
         username: fields.username,
         password: fields.password,
-        confirmPassword: fields.confirmPassword
+        confirmPassword: fields.confirmPassword,
+        role: "ADMIN"
       })
     })
       .then(response => {
         if (!response.ok) {
           throw response;
         }
+        setLoading(false);
         setFieldErrors(initialFields);
         navigate("/admin/login",{ state: { sucReg: true }});
       })
       .catch(err => {
+        setLoading(false);
         if (err.text) {
           err.text().then(errorMessage => {
             const errObj = JSON.parse(errorMessage);
-
+            
             setFieldErrors({ ...initialFields, ...errObj });
           });
         } else {
@@ -70,6 +75,7 @@ const SignUp = () => {
           Sign up
         </Typography>
         <ServerErrorMessage error={serverError}/>
+        {loading && <CircularProgress />}
         <form
           className={classes.form}
           validate="true"
@@ -135,6 +141,7 @@ const SignUp = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={loading}
           >
             Sign Up
           </Button>

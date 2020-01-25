@@ -18,6 +18,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { navigate, Link as RouterLink } from "@reach/router";
 import Link from "@material-ui/core/Link";
+import {apiUrl} from "../../App";
 
 
 const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
@@ -41,11 +42,11 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
   useEffect(() => {
     if(categories){
 
-        fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/foodarticle/${foodArticleId}`, {
+        fetch(`${apiUrl}/api/admin/restaurant/${restaurantId}/foodarticle/${foodArticleId}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: authContext.state.token
+              Authorization: authContext.state.adminState.token
             }
           })
             .then(response => {
@@ -60,7 +61,7 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
             })
             .catch(err => {
               if (err.text) {
-                  authContext.dispatch({type: "logout"});
+                  authContext.dispatch({type: "adminLogout"});
                   navigate("/admin/login/");
               } else {
                 setServerError(true);
@@ -71,11 +72,11 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
   }, [categories]);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/category/all`, {
+    fetch(`${apiUrl}/api/admin/restaurant/${restaurantId}/category/all`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: authContext.state.token
+        Authorization: authContext.state.adminState.token
       }
     })
       .then(response => {
@@ -90,7 +91,7 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
       })
       .catch(err => {
         if (err.text) {
-            authContext.dispatch({type: "logout"});
+            authContext.dispatch({type: "adminLogout"});
             navigate("/admin/login/");
         } else {
           setServerError(true);
@@ -99,17 +100,17 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
 
   }, []);
 
-  const handleEditArticle = () => {
+  const handleEditArticle = (event) => {
     event.preventDefault();
     if(articleFields.categoryIdentifier==="")
     {
       setFieldErrors({categoryIdentifier:"Category is required"});
     }else {
-    fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/foodarticle/`, {
+    fetch(`${apiUrl}/api/admin/restaurant/${restaurantId}/foodarticle/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: authContext.state.token
+        Authorization: authContext.state.adminState.token
       },
       body: JSON.stringify({
         id: foodArticleId,
@@ -130,18 +131,17 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
         navigate(`/admin/restaurants/${restaurantId}`);
       })
       .catch(err => {
+        setLoading(false);
         if (err.text) {
           err.text().then(errorMessage => {
             
             const errObj = JSON.parse(errorMessage);
-            setLoading(false);
             setFieldErrors({
               ...initialFields,
               ...errObj
             });
           });
         } else {
-          setLoading(false);
           setServerError(true);
           setFieldErrors(initialFields);
         }
@@ -236,13 +236,14 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={loading}
           >
             Submit
           </Button>
           <Grid container>
             <Grid item>
               <Link component={RouterLink} to={`/admin/restaurants/${restaurantId}/`} variant="body2">
-                {"Back to restaurant"}
+                {"< Back to restaurant"}
               </Link>
             </Grid>
           </Grid>

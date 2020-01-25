@@ -20,6 +20,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { Link as RouterLink } from "@reach/router";
 import Link from "@material-ui/core/Link";
+import {apiUrl} from "../../App";
+
 const Restaurant = ({ restaurantId }) => {
   const classes = useStyles();
   const authContext = useContext(authStore);
@@ -33,11 +35,11 @@ const Restaurant = ({ restaurantId }) => {
   const [disableAddFoodButton, setDisableAddFoodButton] = useState(false);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/category/all`, {
+    fetch(`${apiUrl}/api/admin/restaurant/${restaurantId}/category/all`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: authContext.state.token
+        Authorization: authContext.state.adminState.token
       }
     })
       .then(response => {
@@ -57,7 +59,7 @@ const Restaurant = ({ restaurantId }) => {
       })
       .catch(err => {
         if (err.text) {
-            authContext.dispatch({type: "logout"});
+            authContext.dispatch({type: "adminLogout"});
             navigate("/admin/login/");
         } else {
           setServerError(true);
@@ -67,11 +69,11 @@ const Restaurant = ({ restaurantId }) => {
   }, [refreshCategoryOnAdd]);
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/category/${categoryId}`, {
+    fetch(`${apiUrl}/api/admin/restaurant/${restaurantId}/category/${categoryId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: authContext.state.token
+        Authorization: authContext.state.adminState.token
       }
     })
       .then(response => {
@@ -97,7 +99,7 @@ const Restaurant = ({ restaurantId }) => {
       .catch(err => {
         if (err.text) {
           setLoading(false);
-          authContext.dispatch({type: "logout"});
+          authContext.dispatch({type: "adminLogout"});
           navigate("/admin/login/");
         } else {
           setLoading(false);
@@ -206,16 +208,6 @@ const Restaurant = ({ restaurantId }) => {
 }
 
 const useStyles = makeStyles(theme => ({
-  icon: {
-    marginRight: theme.spacing(2)
-  },
-  heroContent: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(8, 0, 6)
-  },
-  heroButtons: {
-    marginTop: theme.spacing(4)
-  },
   cardGrid: {
     paddingTop: theme.spacing(8),
     paddingBottom: theme.spacing(8)
@@ -229,16 +221,6 @@ const useStyles = makeStyles(theme => ({
     paddingTop: "56.25%" // 16:9
   },
   cardContent: {
-    flexGrow: 1
-  },
-  footer: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(6)
-  },
-  menuButton: {
-    marginRight: theme.spacing(2)
-  },
-  title: {
     flexGrow: 1
   },
   formControl: {

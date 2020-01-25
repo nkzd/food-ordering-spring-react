@@ -13,6 +13,8 @@ import { authStore } from "../../store/AuthStore";
 import { navigate, Link as RouterLink } from "@reach/router";
 import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import {apiUrl} from "../../App";
+
 const EditRestaurant = (props) => {
   const classes = useStyles();
 
@@ -34,11 +36,11 @@ const EditRestaurant = (props) => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:8080/api/admin/restaurant/${props.restaurantId}`, {
+    fetch(`${apiUrl}/api/admin/restaurant/${props.restaurantId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: authContext.state.token
+        Authorization: authContext.state.adminState.token
       }
     })
       .then(response => {
@@ -60,7 +62,7 @@ const EditRestaurant = (props) => {
         if (err.text) {
           
           setLoading(false);
-          authContext.dispatch({type: "logout"});
+          authContext.dispatch({type: "adminLogout"});
           navigate("/admin/login/");
           
         } else {
@@ -73,11 +75,11 @@ const EditRestaurant = (props) => {
   const handleEdit = event => {
     event.preventDefault();
     setLoading(true);
-    fetch("http://localhost:8080/api/admin/restaurant", {
+    fetch(`${apiUrl}/api/admin/restaurant`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": authContext.state.token
+        "Authorization": authContext.state.adminState.token
       },
       body: JSON.stringify({
         id: props.restaurantId,
@@ -140,7 +142,7 @@ const EditRestaurant = (props) => {
                 onChange={event => {
                   setRestaurantFields({
                     ...restaurantFields,
-                    username: event.target.value
+                    name: event.target.value
                   });
                 }}
                 helperText={fieldErrors.name}
@@ -229,6 +231,7 @@ const EditRestaurant = (props) => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={loading}
           >
             Submit
           </Button>

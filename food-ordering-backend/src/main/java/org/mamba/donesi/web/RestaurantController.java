@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/admin/restaurant")
+@RequestMapping("/api")
 @CrossOrigin
 public class RestaurantController {
 
@@ -41,11 +41,36 @@ public class RestaurantController {
 
 	@Autowired
 	private MapValidationErrorService mapValidationErrorService;
-	
+
 	@Autowired
 	private FoodArticleValidator foodArticleValidator;
 
-	@PostMapping("")
+	@GetMapping("/restaurant/all")
+	public Iterable<Restaurant> getAllRestaurantsUser() {
+		return restaurantService.findAllRestaurants();
+	}
+
+	@GetMapping("/restaurant/{restaurantId}")
+	public ResponseEntity<?> getRestaurantByIdUser(@PathVariable String restaurantId, Principal principal) {
+		Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
+
+		return new ResponseEntity<Restaurant>(restaurant, HttpStatus.OK);
+	}
+
+	@GetMapping("/restaurant/{restaurantId}/category/all")
+	public Iterable<Category> getAllCategoriesUser(@PathVariable String restaurantId, Principal principal) {
+		Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
+		return categoryService.getAllCategories(restaurant);
+	}
+
+	@GetMapping("/admin/restaurant/{restaurantId}")
+	public ResponseEntity<?> getRestaurantById(@PathVariable String restaurantId, Principal principal) {
+		Restaurant restaurant = restaurantService.findRestaurantById(restaurantId, principal.getName());
+
+		return new ResponseEntity<Restaurant>(restaurant, HttpStatus.OK);
+	}
+
+	@PostMapping("/admin/restaurant")
 	public ResponseEntity<?> createNewRestaurant(@Valid @RequestBody Restaurant restaurant, BindingResult result,
 			Principal principal) {
 		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
@@ -57,31 +82,24 @@ public class RestaurantController {
 		return new ResponseEntity<Restaurant>(newRestaurant, HttpStatus.OK);
 	}
 
-	@GetMapping("/all")
-	public Iterable<Restaurant> getAllRestaurants(Principal principal) {
-		return restaurantService.findAllRestaurants(principal.getName());
+	@GetMapping("/admin/restaurant/all")
+	public Iterable<Restaurant> getAllRestaurantsAdmin(Principal principal) {
+		return restaurantService.findAllRestaurantsByUser(principal.getName());
 	}
 
-	@GetMapping("/{restaurantId}")
-	public ResponseEntity<?> getRestaurantById(@PathVariable String restaurantId, Principal principal) {
-		Restaurant restaurant = restaurantService.findRestaurantById(restaurantId, principal.getName());
-
-		return new ResponseEntity<Restaurant>(restaurant, HttpStatus.OK);
-	}
-
-	@DeleteMapping("/{restaurantId}")
+	@DeleteMapping("/admin/restaurant/{restaurantId}")
 	public ResponseEntity<?> deleteRestaurantById(@PathVariable String restaurantId, Principal principal) {
 		restaurantService.deleteRestaurantById(restaurantId, principal.getName());
 		return new ResponseEntity<String>("Restaurant with ID" + restaurantId + " was deleted", HttpStatus.OK);
 	}
 
-	@GetMapping("/{restaurantId}/category/all")
-	public Iterable<Category> getAllCategories(@PathVariable String restaurantId, Principal principal) {
+	@GetMapping("/admin/restaurant/{restaurantId}/category/all")
+	public Iterable<Category> getAllCategoriesAdmin(@PathVariable String restaurantId, Principal principal) {
 		Restaurant restaurant = restaurantService.findRestaurantById(restaurantId, principal.getName());
 		return categoryService.getAllCategories(restaurant);
 	}
 
-	@GetMapping("/{restaurantId}/category/{categoryId}")
+	@GetMapping("/admin/restaurant/{restaurantId}/category/{categoryId}")
 	public ResponseEntity<?> getCategoryById(@PathVariable String restaurantId, @PathVariable String categoryId,
 			Principal principal) {
 		Restaurant restaurant = restaurantService.findRestaurantById(restaurantId, principal.getName());
@@ -91,7 +109,7 @@ public class RestaurantController {
 		return new ResponseEntity<Category>(category, HttpStatus.OK);
 	}
 
-	@PostMapping("/{restaurantId}/category")
+	@PostMapping("/admin/restaurant/{restaurantId}/category")
 	public ResponseEntity<?> addCategoryToRestaurant(@PathVariable String restaurantId,
 			@Valid @RequestBody Category category, BindingResult result, Principal principal) {
 		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
@@ -103,7 +121,7 @@ public class RestaurantController {
 		return new ResponseEntity<Category>(newCategory, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/{restaurantId}/category/{categoryId}")
+	@DeleteMapping("/admin/restaurant/{restaurantId}/category/{categoryId}")
 	public ResponseEntity<?> deleteCategoryById(@PathVariable String restaurantId, @PathVariable String categoryId,
 			Principal principal) {
 		Restaurant restaurant = restaurantService.findRestaurantById(restaurantId, principal.getName());
@@ -113,13 +131,13 @@ public class RestaurantController {
 		return new ResponseEntity<String>("Category with ID" + categoryId + " was deleted", HttpStatus.OK);
 	}
 
-	@GetMapping("/{restaurantId}/foodarticle/all")
+	@GetMapping("/admin/restaurant/{restaurantId}/foodarticle/all")
 	public Iterable<FoodArticle> getAllFoodArticles(@PathVariable String restaurantId, Principal principal) {
 		Restaurant restaurant = restaurantService.findRestaurantById(restaurantId, principal.getName());
 		return foodArticleService.getAllFoodArticles(restaurant);
 	}
 
-	@GetMapping("/{restaurantId}/foodarticle/{foodArticleId}")
+	@GetMapping("/admin/restaurant/{restaurantId}/foodarticle/{foodArticleId}")
 	public ResponseEntity<?> getFoodArticleById(@PathVariable String restaurantId, @PathVariable String foodArticleId,
 			Principal principal) {
 		Restaurant restaurant = restaurantService.findRestaurantById(restaurantId, principal.getName());
@@ -129,28 +147,28 @@ public class RestaurantController {
 		return new ResponseEntity<FoodArticle>(foodArticle, HttpStatus.OK);
 	}
 
-	@PostMapping("/{restaurantId}/foodarticle")
+	@PostMapping("/admin/restaurant/{restaurantId}/foodarticle")
 	public ResponseEntity<?> addOrUpdateFoodArticleToRestaurant(@PathVariable String restaurantId,
 			@Valid @RequestBody FoodArticle foodArticle, BindingResult result, Principal principal) {
-		
+
 		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
 		if (errorMap != null)
-			return errorMap;	
-		
-		//Provjera nulla
+			return errorMap;
+
+		// Provjera nulla
 		foodArticleValidator.validate(foodArticle, result);
-		
+
 		errorMap = mapValidationErrorService.MapValidationService(result);
 		if (errorMap != null)
 			return errorMap;
-		
+
 		FoodArticle newFoodArticle = restaurantService.saveOrUpdateFoodArticleToRestaurant(restaurantId, foodArticle,
 				principal.getName());
 
 		return new ResponseEntity<FoodArticle>(newFoodArticle, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/{restaurantId}/foodarticle/{foodArticleId}")
+	@DeleteMapping("/admin/restaurant/{restaurantId}/foodarticle/{foodArticleId}")
 	public ResponseEntity<?> deleteFoodArticleById(@PathVariable String restaurantId,
 			@PathVariable String foodArticleId, Principal principal) {
 		Restaurant restaurant = restaurantService.findRestaurantById(restaurantId, principal.getName());

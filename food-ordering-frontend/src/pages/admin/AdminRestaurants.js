@@ -16,6 +16,9 @@ import foodImage from "../../images/food.jpeg";
 import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import DeleteDialog from "../../components/admin/DeleteDialog";
+import {apiUrl} from "../../App";
+import Footer from "../../components/user/Footer";
+
 const Restaurants = () => {
   const authContext = useContext(authStore);
   const classes = useStyles();
@@ -26,11 +29,11 @@ const Restaurants = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:8080/api/admin/restaurant/all", {
+    fetch(`${apiUrl}/api/admin/restaurant/all`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: authContext.state.token
+        Authorization: authContext.state.adminState.token
       }
     })
       .then(response => {
@@ -47,7 +50,7 @@ const Restaurants = () => {
       .catch(err => {
         if (err.text) {
           setLoading(false);
-          authContext.dispatch({type: "logout"});
+          authContext.dispatch({type: "adminLogout"});
           navigate("/admin/login/");
         } else {
           setLoading(false);
@@ -125,6 +128,7 @@ const Restaurants = () => {
               </Grid>
             ))}
           </Grid>
+          <Footer/>
         </Container>
       </main>
     </React.Fragment>
@@ -132,16 +136,6 @@ const Restaurants = () => {
 }
 
 const useStyles = makeStyles(theme => ({
-  icon: {
-    marginRight: theme.spacing(2)
-  },
-  heroContent: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(8, 0, 6)
-  },
-  heroButtons: {
-    marginTop: theme.spacing(4)
-  },
   cardGrid: {
     paddingTop: theme.spacing(8),
     paddingBottom: theme.spacing(8)
@@ -156,19 +150,6 @@ const useStyles = makeStyles(theme => ({
   },
   cardContent: {
     flexGrow: 1
-  },
-  footer: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(6)
-  },
-  menuButton: {
-    marginRight: theme.spacing(2)
-  },
-  title: {
-    flexGrow: 1
-  },
-  loadingSpinner: {
-      //textAlign: "center",
   }
 }));
 export default Restaurants;

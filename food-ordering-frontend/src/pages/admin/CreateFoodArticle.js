@@ -18,6 +18,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { navigate, Link as RouterLink } from "@reach/router";
 import Link from "@material-ui/core/Link";
+import {apiUrl} from "../../App";
 
 
 const CreateFoodArticle = ({restaurantId}) =>  {
@@ -40,11 +41,11 @@ const CreateFoodArticle = ({restaurantId}) =>  {
 
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/category/all`, {
+    fetch(`${apiUrl}/api/admin/restaurant/${restaurantId}/category/all`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: authContext.state.token
+        Authorization: authContext.state.adminState.token
       }
     })
       .then(response => {
@@ -59,7 +60,7 @@ const CreateFoodArticle = ({restaurantId}) =>  {
       })
       .catch(err => {
         if (err.text) {
-          authContext.dispatch({type: "logout"});
+          authContext.dispatch({type: "adminLogout"});
           navigate("/admin/login/");
         } else {
           setServerError(true);
@@ -68,18 +69,18 @@ const CreateFoodArticle = ({restaurantId}) =>  {
 
   }, []);
 
-  const handleAddArticle = () => {
+  const handleAddArticle = (event) => {
     event.preventDefault();
     if(articleFields.categoryIdentifier==="")
     {
       setFieldErrors({categoryIdentifier:"Category is required"});
       
     }else {
-    fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/foodarticle/`, {
+    fetch(`${apiUrl}/api/admin/restaurant/${restaurantId}/foodarticle/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: authContext.state.token
+        Authorization: authContext.state.adminState.token
       },
       body: JSON.stringify({
         name: articleFields.name,
@@ -99,17 +100,16 @@ const CreateFoodArticle = ({restaurantId}) =>  {
         navigate(`/admin/restaurants/${restaurantId}`);
       })
       .catch(err => {
+        setLoading(false);
         if (err.text) {
           err.text().then(errorMessage => {
             const errObj = JSON.parse(errorMessage);
-            setLoading(false);
             setFieldErrors({
               ...initialFields,
               ...errObj
             });
           });
         } else {
-          setLoading(false);
           setServerError(true);
           setFieldErrors(initialFields);
         }
@@ -204,6 +204,7 @@ const CreateFoodArticle = ({restaurantId}) =>  {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={false}
           >
             Submit
           </Button>
@@ -240,7 +241,7 @@ const useStyles = makeStyles(theme => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 210,
+    minWidth: 230,
   },
 }));
 

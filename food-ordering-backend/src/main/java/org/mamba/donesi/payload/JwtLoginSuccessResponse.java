@@ -19,5 +19,5 @@ public class JwtLoginSuccessResponse {
 	public void setToken(String token) {
 		this.token = token;
 	}
-	
+
 }

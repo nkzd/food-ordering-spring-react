@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class CategoryIdException extends RuntimeException{
+public class AlreadyExistsException extends RuntimeException{
 
-	public CategoryIdException(String message) {
+	public AlreadyExistsException(String message) {
 		super(message);
 	}
 	

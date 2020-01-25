@@ -10,33 +10,23 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 @RestController
-public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler{
+public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler
-    public final ResponseEntity<Object> handleUsernameAlreadyExists(UsernameAlreadyExistsException ex, WebRequest request){
-    	UsernameAlreadyExistsResponse exceptionResponse = new UsernameAlreadyExistsResponse(ex.getMessage());
-    	return new ResponseEntity(exceptionResponse,HttpStatus.BAD_REQUEST);
-    }
+	public final ResponseEntity<Object> handleUsernameAlreadyExists(AlreadyExistsException ex, WebRequest request) {
+		AlreadyExistsResponse exceptionResponse = new AlreadyExistsResponse(ex.getMessage());
+		return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
+
 	@ExceptionHandler
-    public final ResponseEntity<Object> handleRestaurantNotFoundException(RestaurantNotFoundException ex, WebRequest request){
-		RestaurantNotFoundResponse exceptionResponse = new RestaurantNotFoundResponse(ex.getMessage());
-    	return new ResponseEntity(exceptionResponse,HttpStatus.BAD_REQUEST);
-    }
+	public final ResponseEntity<Object> handleIdException(IdException ex, WebRequest request) {
+		IdResponse exceptionResponse = new IdResponse(ex.getMessage());
+		return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
+
 	@ExceptionHandler
-    public final ResponseEntity<Object> handleRestaurantIdException(RestaurantIdException ex, WebRequest request){
-		RestaurantIdResponse exceptionResponse = new RestaurantIdResponse(ex.getMessage());
-    	return new ResponseEntity(exceptionResponse,HttpStatus.BAD_REQUEST);
-    }
-	
-	@ExceptionHandler
-    public final ResponseEntity<Object> handleCategoryIdException(CategoryIdException ex, WebRequest request){
-		CategoryIdResponse exceptionResponse = new CategoryIdResponse(ex.getMessage());
-    	return new ResponseEntity(exceptionResponse,HttpStatus.BAD_REQUEST);
-    }
-	@ExceptionHandler
-    public final ResponseEntity<Object> handleFoodArticleIdException(FoodArticleIdException ex, WebRequest request){
-		FoodArticleIdResponse exceptionResponse = new FoodArticleIdResponse(ex.getMessage());
-    	return new ResponseEntity(exceptionResponse,HttpStatus.BAD_REQUEST);
-    }
-	
+	public final ResponseEntity<Object> handleIdException(NotInAccountException ex, WebRequest request) {
+		NotInAccountResponse exceptionResponse = new NotInAccountResponse(ex.getMessage());
+		return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
 }

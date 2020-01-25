@@ -9,6 +9,7 @@ import { authStore } from "../../store/AuthStore";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
+import {apiUrl} from "../../App";
 
 const AddCategoryDialog = ({restaurantId, refresh}) => {
   const classes = useStyles();
@@ -21,11 +22,11 @@ const AddCategoryDialog = ({restaurantId, refresh}) => {
   const handleAdd = () => {
     setName("");
     event.preventDefault();
-    fetch(`http://localhost:8080/api/admin/restaurant/${restaurantId}/category/`, {
+    fetch(`${apiUrl}/api/admin/restaurant/${restaurantId}/category/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: authContext.state.token
+          Authorization: authContext.state.adminState.token
         },
         body:JSON.stringify({
             name: name
@@ -55,9 +56,9 @@ const AddCategoryDialog = ({restaurantId, refresh}) => {
               onClose={() => {
                 setOpen(false);
               }}
-              aria-labelledby="form-dialog-title"
+              aria-labelledby="form-dialog-add-category"
             >
-              <DialogTitle id="form-dialog-title">New category</DialogTitle>
+              <DialogTitle id="form-dialog-add-category">New category</DialogTitle>
               <DialogContent>
                 <DialogContentText>
                   To add new food category, please enter category name here.

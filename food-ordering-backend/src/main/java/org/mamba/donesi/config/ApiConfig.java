@@ -6,23 +6,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "api")
 public class ApiConfig {
-	private String publicUrls;
 	private String tokenPrefix;
 	private String headerString;
 	private Long expirationTime;
-
+	private String jwtSecret;
+	
 	public ApiConfig() {
 		super();
 	}
-
-	public String getPublicUrls() {
-		return publicUrls;
-	}
-
-	public void setPublicUrls(String publicUrls) {
-		this.publicUrls = publicUrls;
-	}
-
 	public String getTokenPrefix() {
 		return tokenPrefix;
 	}
@@ -45,6 +36,14 @@ public class ApiConfig {
 
 	public void setExpirationTime(Long expirationTime) {
 		this.expirationTime = expirationTime;
+	}
+
+	public String getJwtSecret() {
+		return jwtSecret;
+	}
+
+	public void setJwtSecret(String jwtSecret) {
+		this.jwtSecret = jwtSecret;
 	}
 
 }

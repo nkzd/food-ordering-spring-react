@@ -6,7 +6,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
-public class FoodArticleValidator  implements Validator{
+public class FoodArticleValidator implements Validator {
 	@Override
 	public boolean supports(Class<?> aClass) {
 		return FoodArticle.class.equals(aClass);
@@ -15,9 +15,9 @@ public class FoodArticleValidator  implements Validator{
 	@Override
 	public void validate(Object target, Errors errors) {
 		FoodArticle foodArticle = (FoodArticle) target;
-		
-		if(foodArticle.getCategoryIdentifier() == null){
-            errors.rejectValue("categoryIdentifier","Required", "Category identifier is required.");
-        }
-	}	
+
+		if (foodArticle.getCategoryIdentifier() == null) {
+			errors.rejectValue("categoryIdentifier", "Required", "Category identifier is required.");
+		}
+	}
 }

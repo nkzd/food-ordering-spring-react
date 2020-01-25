@@ -13,6 +13,9 @@ import { authStore } from "../../store/AuthStore";
 import { navigate, Link as RouterLink } from "@reach/router";
 import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import {apiUrl} from "../../App";
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 const Login = (props) => {
   const classes = useStyles();
   const authState = useContext(authStore);
@@ -22,23 +25,28 @@ const Login = (props) => {
 
   const initialFields = {
     username: "",
-    password: ""
+    password: "",
+    checked: false
   };
 
   const [fields, setFields] = useState(initialFields);
 
   const [fieldErrors, setFieldErrors] = useState(initialFields);
 
+  //Show successful registration message if user just registrated.
   let showSuccessAfterRegistration=false;
-  if (typeof props.location.state.sucReg !== 'undefined') {
-    showSuccessAfterRegistration=true;
+  try{
+    if(props.location.state.sucReg===true)
+      showSuccessAfterRegistration=true;
+  }catch(err){
+    showSuccessAfterRegistration=false;
   }
   
 
   const handleLogin = event => {
     event.preventDefault();
     setLoading(true);
-    fetch("http://localhost:8080/api/admin/users/login", {
+    fetch(`${apiUrl}/api/user/adminlogin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -52,16 +60,17 @@ const Login = (props) => {
         if (!response.ok) {
           throw response;
         }
-        return response.json(); //we only get here if there is no error
+        return response.json(); 
       })
       .then(json => {
         setFieldErrors(initialFields);
 
         dispatch({
-          type: "login",
+          type: "adminLogin",
           payload: {
             token: json.token,
-            username: fields.username
+            username: fields.username,
+            rememberMe: fields.checked
           }
         });
         setServerError(false);
@@ -69,14 +78,13 @@ const Login = (props) => {
         navigate("/admin/");
       })
       .catch(err => {
+        setLoading(false);
         if (err.text) {
-            setLoading(false);
             setFieldErrors({
               ...initialFields,
               username: "The username or password you have entered is invalid."
           });
         } else {
-          setLoading(false);
           setServerError(true);
           setFieldErrors(initialFields);
         }
@@ -137,12 +145,22 @@ const Login = (props) => {
             helperText={fieldErrors.password}
             error={!!fieldErrors.password}
           />
+          <FormControlLabel
+              control={
+              <Checkbox value="remember" color="primary" checked={fields.checked} 
+              onChange={event=>{
+                setFields({ ...fields, checked: event.target.checked });
+              }}/>
+            }
+              label="Remember me"
+            />
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={loading}
           >
             Sign In
           </Button>
