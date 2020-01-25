@@ -9,8 +9,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RestaurantRepository extends CrudRepository<Restaurant,Long>{
 	
-	List<Restaurant> findByAppUser(AppUser appUser);
+	public List<Restaurant> findByAppUser(AppUser appUser);
 	
-	List<Restaurant> findByAppUser_Username(String username);
+	public List<Restaurant> findByAppUser_Username(String username);
+	
+	public Restaurant getById(Long id);
 	
 }

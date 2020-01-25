@@ -102,7 +102,7 @@ const UserRestaurant = ({restaurantId}) => {
             <FoodArticleList categories={data.categories} restaurantId={restaurantId} refs={refs} handleBasketAdd={handleBasketAdd}/>
           </Grid>
           <Grid item xs={3}>
-           <Basket basketState={basketState} setBasketState={setBasketState} />
+           <Basket basketState={basketState} setBasketState={setBasketState} restaurantId={restaurantId}/>
           </Grid>
         </Grid>
         <Footer/>

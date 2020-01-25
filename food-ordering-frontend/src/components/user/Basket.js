@@ -14,7 +14,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
-const Basket = ({basketState, setBasketState}) => {
+const Basket = ({basketState, setBasketState, restaurantId}) => {
     const classes = useStyles();
     const authContext = useContext(authStore);
     const [openSnack, setOpenSnack] = React.useState(false);
@@ -22,6 +22,7 @@ const Basket = ({basketState, setBasketState}) => {
     const [serverError,setServerError] = useState(false);
 
     const handleOrderSubmit = () => {
+        const orderTemplate={basketState: basketState, restaurantId:restaurantId}
         setLoading(true);
         fetch(`${apiUrl}/api/order/`, {
             method: "POST",
@@ -29,7 +30,7 @@ const Basket = ({basketState, setBasketState}) => {
               "Content-Type": "application/json",
               "Authorization": authContext.state.userState.token
             },
-            body: JSON.stringify(basketState)
+            body: JSON.stringify(orderTemplate)
         })
         .then(response => {
             if (!response.ok) {
@@ -181,7 +182,13 @@ const Basket = ({basketState, setBasketState}) => {
                 )
             }
             <div align="center">
-                <Button variant="contained" className={classes.submitButton} color="primary" onClick={()=>{handleOrderSubmit()}} disabled={loading}>
+                <Button variant="contained" 
+                className={classes.submitButton} 
+                color="primary" 
+                onClick={()=>{handleOrderSubmit()}}
+                disabled={
+                    (basketState.length==0 || loading) ? true : false
+                }>
                     Submit
                 </Button>
             </div>

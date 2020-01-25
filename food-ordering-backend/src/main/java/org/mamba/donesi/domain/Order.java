@@ -66,4 +66,8 @@ public class Order {
 		return "Order [foodArticle=" + foodArticle.getName() + ", orderNote=" + orderNote + ", quantity=" + quantity + "]";
 	}
 	
+	public String toEmailTemplate() {
+		return "Food Article: " + foodArticle.getName() + ", quantity: " + quantity + ". Order note: " + orderNote + "\n";
+	}
+	
 }

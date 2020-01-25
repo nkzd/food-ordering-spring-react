@@ -100,7 +100,7 @@ const EditFoodArticle = ({restaurantId, foodArticleId}) =>  {
 
   }, []);
 
-  const handleEditArticle = () => {
+  const handleEditArticle = (event) => {
     event.preventDefault();
     if(articleFields.categoryIdentifier==="")
     {

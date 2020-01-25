@@ -1,10 +1,9 @@
 package org.mamba.donesi.web;
 
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.List;
 
-import org.mamba.donesi.domain.Order;
+import org.mamba.donesi.domain.OrderRequest;
+import org.mamba.donesi.services.MailService;
 import org.mamba.donesi.services.MapValidationErrorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,23 +22,25 @@ public class OrderController {
 	@Autowired
 	private MapValidationErrorService mapValidationErrorService;
 	
+	@Autowired
+	private MailService mailService;
+	
 	@PostMapping("/order")
-	ResponseEntity<?> sendOrder(@RequestBody Order[] orders, BindingResult result) {
+	ResponseEntity<?> sendOrder(@RequestBody OrderRequest orderRequest, BindingResult result, Principal principal) {
 		
 		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
 		if (errorMap != null)
 			return errorMap;
-		
-		List<Order> allOrders = Arrays.asList(orders);
-		
-		StringBuilder b = new StringBuilder();
+
 		try {
-			allOrders.forEach(b::append);
+			mailService.sendOrderRequest(orderRequest, principal.getName());
+			System.out.println("Hura!");
 		}catch(Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);	
 		}
 		
-		return new ResponseEntity<String>(b.toString(),HttpStatus.OK);
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
 }
