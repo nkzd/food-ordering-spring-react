@@ -58,7 +58,7 @@ const UserRestaurants = () => {
     <React.Fragment>
       <CssBaseline />
       
-      <HeroOverlay/>
+      <HeroOverlay imageSelection="waiter"/>
 
       <Container maxWidth="md" className={classes.main}>
 

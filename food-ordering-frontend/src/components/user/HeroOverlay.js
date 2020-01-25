@@ -11,10 +11,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import { navigate, Link as RouterLink } from "@reach/router";
 
 
-const HeroOverlay = () => {
+const HeroOverlay = ({imageSelection}) => {
     const classes = useStyles();
-    let random_boolean = Math.random() >= 0.5;
-    const randomImage = (random_boolean) ? waiterImage : burgerImage;
+    const randomImage = (imageSelection=="burger") ? burgerImage : waiterImage;
     return(
         <Container maxWidth="md">
         <Paper className={classes.hero} style={{backgroundImage: `url(${randomImage})`}}>

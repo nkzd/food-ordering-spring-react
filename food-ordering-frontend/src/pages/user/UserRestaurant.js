@@ -81,7 +81,7 @@ const UserRestaurant = ({restaurantId}) => {
   return (
     <React.Fragment>
       <CssBaseline />
-      <HeroOverlay/>
+      <HeroOverlay imageSelection="burger"/>
       <br/>
       <Container style={{ height: "70vh"}}>
         <Grid container

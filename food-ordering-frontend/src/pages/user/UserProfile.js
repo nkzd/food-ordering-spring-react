@@ -91,7 +91,7 @@ const UserProfile = () => {
     return (
         <React.Fragment>
           <CssBaseline />
-          <HeroOverlay/>
+          <HeroOverlay imageSelection="waiter"/>
           <br/>
 
             <Container maxWidth="sm">
