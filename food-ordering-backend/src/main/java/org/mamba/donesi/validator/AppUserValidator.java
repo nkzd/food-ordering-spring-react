@@ -6,7 +6,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
-public class AppUserValidator implements Validator{
+public class AppUserValidator implements Validator {
 
 	@Override
 	public boolean supports(Class<?> aClass) {
@@ -16,12 +16,12 @@ public class AppUserValidator implements Validator{
 	@Override
 	public void validate(Object target, Errors errors) {
 		AppUser user = (AppUser) target;
-		
-		if(user.getPassword().length() <6){
-            errors.rejectValue("password","Length", "Password must be at least 6 characters");
-        }
-		
-		if(!user.getPassword().equals(user.getConfirmPassword())) {
+
+		if (user.getPassword().length() < 6) {
+			errors.rejectValue("password", "Length", "Password must be at least 6 characters");
+		}
+
+		if (!user.getPassword().equals(user.getConfirmPassword())) {
 			errors.rejectValue("confirmPassword", "Match", "Passwords must match");
 		}
 	}

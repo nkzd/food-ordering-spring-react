@@ -48,39 +48,16 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-		authenticationManagerBuilder.userDetailsService(appUserDetailsService)
-				.passwordEncoder(bCryptPasswordEncoder());
+		authenticationManagerBuilder.userDetailsService(appUserDetailsService).passwordEncoder(bCryptPasswordEncoder());
 	}
 
-//	@Override
-//	protected void configure(HttpSecurity http) throws Exception {
-//		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-//				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-//				.antMatchers("/", 
-//						"/favicon.ico", 
-//						"/**/*.png", 
-//						"/**/*.gif", 
-//						"/**/*.svg", 
-//						"/**/*.jpg", 
-//						"/**/*.html",
-//						"/**/*.css", 
-//						"/**/*.js").permitAll()
-//				.antMatchers(apiConfig.getPublicUrls())
-//				.permitAll().antMatchers("/api/admin/auth/**")
-//				.hasRole("ADMIN").antMatchers("/api/admin/restaurant/**").hasRole("ADMIN")
-//				.anyRequest().authenticated();
-//
-//		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-//	}
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-				.antMatchers("/api/user/userinfo/**").authenticated()
-				.antMatchers("/api/restaurant/**").authenticated()
-				.antMatchers("/api/order/**").authenticated()
-				.antMatchers("/api/admin/**").hasRole("ADMIN")
-				.anyRequest().permitAll();
+				.antMatchers("/api/user/userinfo/**").authenticated().antMatchers("/api/restaurant/**").authenticated()
+				.antMatchers("/api/order/**").authenticated().antMatchers("/api/admin/**").hasRole("ADMIN").anyRequest()
+				.permitAll();
 
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}

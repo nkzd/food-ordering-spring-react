@@ -15,6 +15,5 @@ public class NotInAccountResponse {
 	public void setIdNotFound(String idNotFound) {
 		this.idNotFound = idNotFound;
 	}
-	
-	
+
 }

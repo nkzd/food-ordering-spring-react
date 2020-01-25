@@ -36,7 +36,7 @@ public class RestaurantService {
 	public Iterable<Restaurant> findAllRestaurantsByUser(String username) {
 		return restaurantRepository.findByAppUser_Username(username);
 	}
-	
+
 	public Iterable<Restaurant> findAllRestaurants() {
 		return restaurantRepository.findAll();
 	}
@@ -56,13 +56,13 @@ public class RestaurantService {
 
 	public Restaurant findRestaurantById(String restaurantId) {
 		Optional<Restaurant> restaurant = restaurantRepository.findById(Long.parseLong(restaurantId));
-		
+
 		if (!restaurant.isPresent()) {
 			throw new IdException("Restaurant ID " + restaurantId + " does not exist");
 		}
 		return restaurant.get();
 	}
-	
+
 	public Restaurant saveOrUpdateRestaurant(Restaurant restaurant, String username) {
 
 		if (restaurant.getId() != null) {

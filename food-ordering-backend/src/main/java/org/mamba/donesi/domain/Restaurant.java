@@ -35,10 +35,10 @@ public class Restaurant {
 	private String email;
 	@NotBlank
 	private String address;
-	
-	@Column(length=1000)
+
+	@Column(length = 1000)
 	private String description;
-	
+
 	private String pictureUrl;
 
 	@ManyToOne(fetch = FetchType.EAGER)

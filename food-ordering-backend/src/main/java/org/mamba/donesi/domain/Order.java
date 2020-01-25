@@ -3,15 +3,15 @@ package org.mamba.donesi.domain;
 import javax.validation.constraints.NotBlank;
 
 public class Order {
-	
+
 	@NotBlank(message = "id is required")
 	private Long id;
-	
+
 	@NotBlank(message = "food article is required")
 	private FoodArticle foodArticle;
-	
+
 	private String orderNote;
-	
+
 	@NotBlank(message = "quantity is required")
 	private Long quantity;
 
@@ -63,11 +63,13 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return "Order [foodArticle=" + foodArticle.getName() + ", orderNote=" + orderNote + ", quantity=" + quantity + "]";
+		return "Order [foodArticle=" + foodArticle.getName() + ", orderNote=" + orderNote + ", quantity=" + quantity
+				+ "]";
 	}
-	
+
 	public String toEmailTemplate() {
-		return "Food Article: " + foodArticle.getName() + ", quantity: " + quantity + ". Order note: " + orderNote + "\n";
+		return "Food Article: " + foodArticle.getName() + ", quantity: " + quantity + ". Order note: " + orderNote
+				+ "\n";
 	}
-	
+
 }

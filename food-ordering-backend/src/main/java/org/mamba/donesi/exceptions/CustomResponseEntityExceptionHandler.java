@@ -10,21 +10,23 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 @RestController
-public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler{
+public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler
-    public final ResponseEntity<Object> handleUsernameAlreadyExists(AlreadyExistsException ex, WebRequest request){
-    	AlreadyExistsResponse exceptionResponse = new AlreadyExistsResponse(ex.getMessage());
-    	return new ResponseEntity(exceptionResponse,HttpStatus.BAD_REQUEST);
-    }
+	public final ResponseEntity<Object> handleUsernameAlreadyExists(AlreadyExistsException ex, WebRequest request) {
+		AlreadyExistsResponse exceptionResponse = new AlreadyExistsResponse(ex.getMessage());
+		return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
+
 	@ExceptionHandler
-    public final ResponseEntity<Object> handleIdException(IdException ex, WebRequest request){
+	public final ResponseEntity<Object> handleIdException(IdException ex, WebRequest request) {
 		IdResponse exceptionResponse = new IdResponse(ex.getMessage());
-    	return new ResponseEntity(exceptionResponse,HttpStatus.BAD_REQUEST);
-    }
+		return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
+
 	@ExceptionHandler
-    public final ResponseEntity<Object> handleIdException(NotInAccountException ex, WebRequest request){
+	public final ResponseEntity<Object> handleIdException(NotInAccountException ex, WebRequest request) {
 		NotInAccountResponse exceptionResponse = new NotInAccountResponse(ex.getMessage());
-    	return new ResponseEntity(exceptionResponse,HttpStatus.BAD_REQUEST);
-    }
+		return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
 }

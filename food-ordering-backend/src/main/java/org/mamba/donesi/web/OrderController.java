@@ -21,13 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 	@Autowired
 	private MapValidationErrorService mapValidationErrorService;
-	
+
 	@Autowired
 	private MailService mailService;
-	
+
 	@PostMapping("/order")
 	ResponseEntity<?> sendOrder(@RequestBody OrderRequest orderRequest, BindingResult result, Principal principal) {
-		
+
 		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
 		if (errorMap != null)
 			return errorMap;
@@ -35,12 +35,12 @@ public class OrderController {
 		try {
 			mailService.sendOrderRequest(orderRequest, principal.getName());
 			System.out.println("Hura!");
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);	
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
+
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
-	
+
 }

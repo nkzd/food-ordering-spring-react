@@ -43,8 +43,7 @@ public class AppUserService {
 	}
 
 	public AppUser update(@Valid AppUser updateUser, String username) {
-		if(updateUser.getId().equals(getByUsername(username).getId()))
-		{
+		if (updateUser.getId().equals(getByUsername(username).getId())) {
 			try {
 				updateUser.setPassword(bCryptPasswordEncoder.encode(updateUser.getPassword()));
 				AppUser appUser = appUserRepository.save(updateUser);
@@ -54,7 +53,7 @@ public class AppUserService {
 				e.printStackTrace();
 				throw new AlreadyExistsException("Username " + updateUser.getUsername() + " already exists");
 			}
-		}else {
+		} else {
 			throw new NotInAccountException("Details not found in your account");
 		}
 	}

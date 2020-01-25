@@ -60,9 +60,6 @@ public class AppUser implements UserDetails {
 	@OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "appUser", orphanRemoval = true)
 	private List<Restaurant> restaraunts = new ArrayList<>();
 	
-//    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "appUser")
-//    private UserInfo userInfo;
-	
 	@OneToOne(mappedBy = "appUser",cascade = CascadeType.ALL)
 	private UserInfo userInfo;
 	

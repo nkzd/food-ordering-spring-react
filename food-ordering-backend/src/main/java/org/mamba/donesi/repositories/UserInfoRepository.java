@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserInfoRepository extends CrudRepository<UserInfo,Long>{
+public interface UserInfoRepository extends CrudRepository<UserInfo, Long> {
 	List<UserInfo> findByAppUser(AppUser appUser);
 
 	List<UserInfo> findByAppUser_Id(Long id);
