@@ -1,7 +1,7 @@
 import React from "react";
+import { Redirect } from "@reach/router";
 
 const NotFound = () => {
-  return <p>Whatever yo</p>;
+  return <Redirect from="" to="/" noThrow />;
 };
-
 export default NotFound;
