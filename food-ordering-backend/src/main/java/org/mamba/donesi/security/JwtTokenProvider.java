@@ -37,12 +37,12 @@ public class JwtTokenProvider {
 		claims.put("username", appUser.getUsername());
 
 		return Jwts.builder().setSubject(userId).setClaims(claims).setIssuedAt(now).setExpiration(expiryDate)
-				.signWith(SignatureAlgorithm.HS512, System.getenv("jwt_secret")).compact();
+				.signWith(SignatureAlgorithm.HS512, apiConfig.getJwtSecret()).compact();
 	}
 
 	public boolean validateToken(String token) {
 		try {
-			Jwts.parser().setSigningKey(System.getenv("jwt_secret")).parseClaimsJws(token);
+			Jwts.parser().setSigningKey(apiConfig.getJwtSecret()).parseClaimsJws(token);
 			return true;
 		} catch (SignatureException ex) {
 			System.out.println("Invalid JWT Signature");
@@ -59,7 +59,7 @@ public class JwtTokenProvider {
 	}
 
 	public Long getUserIdFromJWT(String token) {
-		Claims claims = Jwts.parser().setSigningKey(System.getenv("jwt_secret")).parseClaimsJws(token).getBody();
+		Claims claims = Jwts.parser().setSigningKey(apiConfig.getJwtSecret()).parseClaimsJws(token).getBody();
 		String id = (String) claims.get("id");
 
 		return Long.parseLong(id);
