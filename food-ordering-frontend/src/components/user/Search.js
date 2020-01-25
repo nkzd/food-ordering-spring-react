@@ -9,7 +9,8 @@ const Search = ({field}) => {
   const classes = useStyles();
   const {searchField, setSearchField} = field;
   return (
-    <Paper component="form" className={classes.root}>
+    <Paper component="form" onSubmit={(event)=>{event.preventDefault()}} className={classes.root}>
+      
       <InputBase
         className={classes.input}
         placeholder="Search restaurants"
@@ -19,9 +20,9 @@ const Search = ({field}) => {
           setSearchField(event.target.value);
         }}
       />
-      <IconButton type="submit" className={classes.iconButton} aria-label="search">
+       <IconButton type="submit" className={classes.iconButton} aria-label="search">
         <SearchIcon />
-      </IconButton>
+      </IconButton> 
     </Paper>
   );
 }
