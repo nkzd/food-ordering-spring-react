@@ -6,7 +6,6 @@ import { makeStyles } from "@material-ui/core/styles";
 const FoodArticleCard = ({foodArticle}) => {
     const classes = useStyles();
     return(
-            //make card clickable
             <div className={classes.article}>
                 <Typography variant="subtitle1" gutterBottom>
                     {foodArticle.name}

@@ -168,7 +168,6 @@ const useStyles = makeStyles(theme => ({
   image: {
     width: 80,
     height: 80
-    // marginRight:theme.spacing(1),
   },
   img: {
     margin: "auto",

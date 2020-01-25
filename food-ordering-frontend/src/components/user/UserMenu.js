@@ -39,7 +39,7 @@ const UserMenu = ()=> {
         setUser(json);
       })
       .catch(err => {
-        //other page components will handle errors.
+        //handled by other component
       });
   },[]);
 

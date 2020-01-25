@@ -20,7 +20,6 @@ const BasketItem = ({basketItem, handleBasketRemove, incrementItemQuantity, decr
                 justify="flex-start"
                 alignItems="flex-start"
             >
-                {/*First row */}
                 <Grid 
                     item 
                     container
@@ -40,7 +39,6 @@ const BasketItem = ({basketItem, handleBasketRemove, incrementItemQuantity, decr
                         </IconButton>
                     </Grid>
                 </Grid>
-                {/*Second row */ }
                 <Grid 
                     item 
                     container
@@ -50,7 +48,6 @@ const BasketItem = ({basketItem, handleBasketRemove, incrementItemQuantity, decr
                     className={classes.secondRow}
                 >
                     <Grid item >
-                        {/* counter komponenta*/}
                         <Grid container direction="row" alignItems="center">
                             <Grid item>
                                 <IconButton aria-label="add" size="small" onClick={()=>{incrementItemQuantity(basketItem)}}>
