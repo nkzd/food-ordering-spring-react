@@ -1,28 +1,27 @@
 import React, {useState, useContext} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Button from '@material-ui/core/Button';
 import BasketImage from "../../images/farm-products.png"
 import BasketItem from "./BasketItem";
+import BasketAddress from "./BasketAddress";
 import {apiUrl} from "../../App";
 import {authStore} from "../../store/AuthStore"
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-
 const Basket = ({basketState, setBasketState, restaurantId}) => {
     const classes = useStyles();
     const authContext = useContext(authStore);
     const [openSnack, setOpenSnack] = React.useState(false);
     const [loading,setLoading] = useState(false);
     const [serverError,setServerError] = useState(false);
+    const [address,setAddress] = useState("");
 
     const handleOrderSubmit = () => {
-        const orderTemplate={basketState: basketState, restaurantId:restaurantId}
+        const orderTemplate={basketState: basketState, restaurantId:restaurantId, deliveryAddress:address}
         setLoading(true);
         fetch(`${apiUrl}/api/order/`, {
             method: "POST",
@@ -126,16 +125,8 @@ const Basket = ({basketState, setBasketState, restaurantId}) => {
                 Your Basket
             </Typography>
             <br/>
-            <Typography style={{
-                display: 'flex',
-                alignItems: 'center'
-            }} variant="body1" gutterBottom>
-                <LocationOnIcon fontSize="small"/>
-                Adresa Neke Ulice 5
-            </Typography>
-            <Link href="#">
-                Change address
-            </Link> 
+            {/*ADDRESS component*/}
+            <BasketAddress address={address} setAddress={setAddress}/>
             <br/>
             <br/>
             {

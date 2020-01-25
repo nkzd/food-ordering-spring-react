@@ -49,7 +49,7 @@ public class MailService {
 		UserInfo userInfo = appUser.getUserInfo();
 
 		String userTemplate = "Deliver to: " + userInfo.getFirstName() + " " + userInfo.getLastName() + " on address: "
-				+ userInfo.getAddress() + " \n";
+				+ orderRequest.getDeliveryAddress() + " \n";
 
 		List<Order> allOrders = Arrays.asList(orderRequest.getBasketState());
 		StringBuilder b = new StringBuilder();

@@ -5,14 +5,25 @@ import org.mamba.donesi.domain.Order;
 
 public class OrderRequest {
 
-	@NotBlank(message = "orders are required")
+	@NotBlank(message = "Orders are required")
 	private Order[] basketState;
 
-	@NotBlank(message = "username is required")
+	@NotBlank(message = "Username is required")
 	private Long restaurantId;
+
+	@NotBlank(message = "Delivery address is required")
+	private String deliveryAddress;
 
 	public OrderRequest() {
 		super();
+	}
+
+	public String getDeliveryAddress() {
+		return deliveryAddress;
+	}
+
+	public void setDeliveryAddress(String deliveryAddress) {
+		this.deliveryAddress = deliveryAddress;
 	}
 
 	public Order[] getBasketState() {

@@ -34,7 +34,6 @@ public class OrderController {
 
 		try {
 			mailService.sendOrderRequest(orderRequest, principal.getName());
-			System.out.println("Hura!");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
