@@ -26,13 +26,13 @@ React
 git clone https://github.com/nkzd/food-ordering-spring-react.git
 ```
 
-Set all your configuration in **application.properties** file.
+Set all your configuration inside **application.properties** file.
 
-Run the following in your terminal:
+Run the following inside food-ordering-backend folder:  
+```mvn spring-boot:run```   
 
-```
-mvn spring-boot:run
-```
+Run the following inside food-ordering-fronted folder:   
+```npm run dev```   
 
 ## License
 
