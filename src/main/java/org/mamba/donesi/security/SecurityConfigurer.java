@@ -30,7 +30,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	private ApiConfig apiConfig;
 
 	@Autowired
-	private JwtAuthenticationEntryPoint unauthorizedHandler;
+	private UnauthorizedHandler unauthorizedHandler;
 
 	@Autowired
 	private AppUserDetailsService appUserDetailsService;
@@ -55,9 +55,12 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-				.antMatchers("/api/user/userinfo/**").authenticated().antMatchers("/api/restaurant/**").authenticated()
-				.antMatchers("/api/order/**").authenticated().antMatchers("/api/admin/**").hasRole("ADMIN").anyRequest()
-				.permitAll();
+				.antMatchers("/api/user/changePassword").authenticated()
+				.antMatchers("/api/user/userinfo/**").authenticated()
+				.antMatchers("/api/restaurant/**").authenticated()
+				.antMatchers("/api/order/**").authenticated()
+				.antMatchers("/api/admin/**").hasRole("ADMIN")
+				.anyRequest().permitAll();
 
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}

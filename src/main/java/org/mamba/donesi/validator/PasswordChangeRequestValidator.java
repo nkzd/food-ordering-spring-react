@@ -1,27 +1,27 @@
 package org.mamba.donesi.validator;
 
-import org.mamba.donesi.domain.AppUser;
+import org.mamba.donesi.domain.PasswordChangeRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
-public class AppUserValidator implements Validator {
+public class PasswordChangeRequestValidator implements Validator {
 
 	@Override
 	public boolean supports(Class<?> aClass) {
-		return AppUser.class.equals(aClass);
+		return PasswordChangeRequest.class.equals(aClass);
 	}
 
 	@Override
 	public void validate(Object target, Errors errors) {
-		AppUser user = (AppUser) target;
+		PasswordChangeRequest request = (PasswordChangeRequest) target;
 
-		if (user.getPassword().length() < 8) {
+		if (request.getPassword().length() < 8) {
 			errors.rejectValue("password", "Length", "Password must be at least 8 characters");
 		}
 
-		if (!user.getPassword().equals(user.getConfirmPassword())) {
+		if (!request.getPassword().equals(request.getConfirmPassword())) {
 			errors.rejectValue("confirmPassword", "Match", "Passwords must match");
 		}
 	}
