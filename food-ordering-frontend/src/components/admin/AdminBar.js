@@ -10,6 +10,7 @@ import { navigate } from "@reach/router";
 import { authStore } from "../../store/AuthStore";
 import AddCategoryDialog from "./AddCategoryDialog"
 import Tooltip from '@material-ui/core/Tooltip';
+import Grid from '@material-ui/core/Grid';
 
 const AdminBar = (props) => {
   const classes = useStyles();
@@ -19,57 +20,97 @@ const AdminBar = (props) => {
     authContext.dispatch({ type: "adminLogout" });
     navigate("/admin/login");
   };
+
+  const handleAddClick = () => {
+    switch (props.pageName) {
+      case "Food Articles":
+        navigate(`/admin/restaurants/${props.restaurantId}/AddFoodArticle`);
+        break;
+      case "Restaurants":
+        navigate("/admin/restaurants/create");
+        break;
+      default:
+        navigate("/admin/restaurants/create");
+        break;
+    }
+  }
+
   return (
-    <div className={classes.root}>
+    <div>
       <AppBar position="static">
         <Toolbar className={classes.toolbar}>
-          <Typography variant="h6">{props.pageName}</Typography>
-          {props.pageName === "Food Articles" ? <AddCategoryDialog restaurantId={props.restaurantId} refresh={props.refresh}/> : "" }
-          
-          <Tooltip title={(props.disableAddFoodButton==null || props.disableAddFoodButton==false) ? "" : "You must add at least one category first."}>
-            <span>
-            <Button
-              variant="contained"
-              className={classes.right}
-              disabled= {(props.disableAddFoodButton==null || props.disableAddFoodButton==false) ? false : true}
-              endIcon={<AddIcon />}
-              onClick={() => {
-                switch (props.pageName) {
-                  case "Food Articles":
-                    navigate(`/admin/restaurants/${props.restaurantId}/AddFoodArticle`);
-                    break;
-                  case "Restaurants":
-                    navigate("/admin/restaurants/create");
-                    break;
-                  default:
-                    navigate("/admin/restaurants/create");
-                    break;
-                }
-              }}
-            >
-              {props.pageName === "Food Articles"
-                ? " Add food article"
-                : "Add restaurant"}
-            </Button>
-          </span>
-          </Tooltip>
-          
-          
-          <div className={classes.left}></div>
 
-          <Typography variant="subtitle1" className={classes.right}>
-            {authContext.state.adminState.username}
-          </Typography>
-
-          <Button
-            variant="contained"
-            color="secondary"
-            className={classes.right}
-            startIcon={<ExitToAppIcon />}
-            onClick={handleLogout}
+          <Grid 
+            container 
+            direction="row"
+            justify="space-between"
+            alignItems="flex-start"
           >
-            Logout
-          </Button>
+            <Grid
+              item
+              container
+              md={6}
+              sm={8}
+              xs={12}
+              spacing={3}
+              direction="row"
+              justify="flex-start"
+              alignItems="flex-start"
+            >
+              <Grid item>
+                <Typography variant="h6">{props.pageName}</Typography>
+              </Grid>
+              <Grid item>
+                {props.pageName === "Food Articles" ? <AddCategoryDialog restaurantId={props.restaurantId} refresh={props.refresh}/> : "" }
+              </Grid>
+              <Grid item>
+                <Tooltip title={(props.disableAddFoodButton==null || props.disableAddFoodButton==false) ? "" : "You must add at least one category first."}>
+                  <Button
+                    variant="contained"
+                    disabled= {(props.disableAddFoodButton==null || props.disableAddFoodButton==false) ? false : true}
+                    endIcon={<AddIcon />}
+                    onClick={handleAddClick}
+                  >
+                    {props.pageName === "Food Articles"
+                      ? " Add food article"
+                      : "Add restaurant"}
+                  </Button>
+                </Tooltip>
+              </Grid>
+
+            </Grid>
+            
+            <Grid
+              item
+              container
+              spacing={3}
+              md={4}
+              sm={4}
+              xs={12}
+              direction="row"
+              justify="flex-start"
+              alignItems="flex-start"
+            >
+              <Grid item>
+                <Typography variant="subtitle1">
+                  {authContext.state.adminState.username}
+                </Typography>
+              </Grid>
+
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<ExitToAppIcon />}
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </Grid>  
+            </Grid>
+
+          </Grid>
+
         </Toolbar>
       </AppBar>
     </div>
@@ -77,15 +118,6 @@ const AdminBar = (props) => {
 }
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1
-  },
-  left: {
-    flexGrow: 1
-  },
-  right: {
-    margin: theme.spacing(2)
-  },
   toolbar: {
     backgroundColor: "#5c6bc0"
   }

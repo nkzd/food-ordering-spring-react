@@ -21,6 +21,7 @@ import Select from '@material-ui/core/Select';
 import { Link as RouterLink } from "@reach/router";
 import Link from "@material-ui/core/Link";
 import {apiUrl} from "../../App";
+import Footer from "../../components/user/Footer";
 
 const Restaurant = ({ restaurantId }) => {
   const classes = useStyles();
@@ -200,6 +201,7 @@ const Restaurant = ({ restaurantId }) => {
               </Link>
             </Grid>
            </Grid>
+           <Footer/>
         </Container>
       </main>
       

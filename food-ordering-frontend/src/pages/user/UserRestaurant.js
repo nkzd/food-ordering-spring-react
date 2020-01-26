@@ -19,11 +19,8 @@ const UserRestaurant = ({restaurantId}) => {
   const [data, setData] = useState({ categories: [] });
   const [serverError, setServerError] = useState(false);
   const [refs,setRefs] = useState([])
-  //tipa [ {itemId: 1, foodArticle:{}, quantity: 2}, {itemId: 2, foodArticle:{}, quantity: 1}...]
   const [basketState, setBasketState] = useState([]);
   const [basketItemId, setBasketItemId]=useState(0);
-
-
 
   useEffect(() => {
     setLoading(true);
@@ -70,10 +67,8 @@ const UserRestaurant = ({restaurantId}) => {
       block: 'start',
   });
 
-  //add and remove from basket. 
 
   const handleBasketAdd = (foodArticleAndNote) => {
-    //add note
     setBasketItemId(basketItemId+1);
     setBasketState([...basketState, {itemId: basketItemId, foodArticle: foodArticleAndNote.foodArticle, quantity: 1, orderNote: foodArticleAndNote.orderNote}])
   }
@@ -83,6 +78,10 @@ const UserRestaurant = ({restaurantId}) => {
       <CssBaseline />
       <HeroOverlay imageSelection="burger"/>
       <br/>
+      <Grid container justify = "center">
+              {loading && <CircularProgress />}
+            </Grid>
+      <ServerErrorMessage error={serverError}/>
       <Container style={{ height: "70vh"}}>
         <Grid container
           direction="row"
@@ -90,18 +89,14 @@ const UserRestaurant = ({restaurantId}) => {
           alignItems="flex-start"
           spacing={2}
         >
-          <Grid container justify = "center">
-              {loading && <CircularProgress />}
-            </Grid>
-          <ServerErrorMessage error={serverError}/>
 
-          <Grid item xs={2}>
+          <Grid item md={2}>
            <CategoryList categories={data.categories} handleCategoryScroll={handleCategoryScroll}/>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item md={6}>
             <FoodArticleList categories={data.categories} restaurantId={restaurantId} refs={refs} handleBasketAdd={handleBasketAdd}/>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item md={3}>
            <Basket basketState={basketState} setBasketState={setBasketState} restaurantId={restaurantId}/>
           </Grid>
         </Grid>

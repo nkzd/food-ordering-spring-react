@@ -101,7 +101,7 @@ const Restaurants = () => {
                         );
                       }}
                     >
-                      View
+                      Articles
                     </Button>
                     <Button
                       size="medium"

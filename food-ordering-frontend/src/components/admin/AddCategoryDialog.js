@@ -8,11 +8,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { authStore } from "../../store/AuthStore";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
 import {apiUrl} from "../../App";
 
 const AddCategoryDialog = ({restaurantId, refresh}) => {
-  const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
   const [name,setName] = React.useState("");
@@ -46,9 +44,9 @@ const AddCategoryDialog = ({restaurantId, refresh}) => {
 
 
   return (
-    <div>
+    <React.Fragment>
         <Button
-            variant="contained" className={classes.right} endIcon={<AddIcon />} onClick={()=>{setOpen(true)}}>
+            variant="contained" endIcon={<AddIcon />} onClick={()=>{setOpen(true)}}>
               Add Category
           </Button>
        <Dialog
@@ -91,16 +89,9 @@ const AddCategoryDialog = ({restaurantId, refresh}) => {
               </DialogActions>
                 </form>
               </DialogContent>
-              
             </Dialog>
-    </div>
+    </React.Fragment>
   );
 }
-
-const useStyles = makeStyles(theme => ({
-  right: {
-    margin: theme.spacing(2)
-  }
-}));
 
 export default AddCategoryDialog;
