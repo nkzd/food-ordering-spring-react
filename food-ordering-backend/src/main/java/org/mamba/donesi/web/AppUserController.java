@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.mamba.donesi.config.ApiConfig;
 import org.mamba.donesi.domain.AppUser;
+import org.mamba.donesi.domain.PasswordChangeRequest;
 import org.mamba.donesi.domain.UserInfo;
 import org.mamba.donesi.payload.JwtLoginSuccessResponse;
 import org.mamba.donesi.payload.LoginRequest;
@@ -14,6 +15,7 @@ import org.mamba.donesi.services.AppUserService;
 import org.mamba.donesi.services.MapValidationErrorService;
 import org.mamba.donesi.services.UserInfoService;
 import org.mamba.donesi.validator.AppUserValidator;
+import org.mamba.donesi.validator.PasswordChangeRequestValidator;
 import org.mamba.donesi.validator.UserInfoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,6 +60,9 @@ public class AppUserController {
 
 	@Autowired
 	private UserInfoValidator userInfoValidator;
+	
+	@Autowired
+	private PasswordChangeRequestValidator passwordChangeRequestValidator;
 
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@Valid @RequestBody AppUser user, BindingResult result) {
@@ -168,5 +173,28 @@ public class AppUserController {
 
 		return new ResponseEntity<UserInfo>(userInfo, HttpStatus.OK);
 	}
+	
+	@PostMapping("/changepassword")
+	public ResponseEntity<?> changePassword(@Valid @RequestBody PasswordChangeRequest passwordChangeRequest, BindingResult result, Principal principal){
+		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+		if (errorMap != null)
+			return errorMap;
+		
+		passwordChangeRequestValidator.validate(passwordChangeRequest, result);
+
+		errorMap = mapValidationErrorService.MapValidationService(result);
+		if (errorMap != null)
+			return errorMap;
+		
+		
+		String username = principal.getName();
+		AppUser appUser = appUserService.getByUsername(username);
+		appUser.setPassword(passwordChangeRequest.getPassword());
+		
+		appUserService.save(appUser);
+		
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+	
 
 }

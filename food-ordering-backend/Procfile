@@ -1,1 +1,1 @@
-web: java -jar target/donesi-test-0.0.1-SNAPSHOT.jar --server.port=8080
+web: java $JAVA_OPTS -jar target/donesi-test-0.0.1-SNAPSHOT.jar -Dserver.port=$PORT $JAR.OPTS

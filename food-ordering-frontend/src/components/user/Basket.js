@@ -10,8 +10,8 @@ import BasketAddress from "./BasketAddress";
 import {apiUrl} from "../../App";
 import {authStore} from "../../store/AuthStore"
 import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+
 const Basket = ({basketState, setBasketState, restaurantId}) => {
     const classes = useStyles();
     const authContext = useContext(authStore);
@@ -190,20 +190,18 @@ const Basket = ({basketState, setBasketState, restaurantId}) => {
         <Snackbar
             anchorOrigin={{
             vertical: 'bottom',
-            horizontal: 'left',
+            horizontal: 'center',
             }}
             open={openSnack}
             autoHideDuration={6000}
             onClose={handleCloseSnack}
-            message={(!serverError) ? "Order processed successfully!" : "Server error, please try again!"}
-            action={
-            <React.Fragment>
-                <IconButton size="small" aria-label="close" color="inherit" onClick={handleCloseSnack}>
-                <CloseIcon fontSize="small" />
-                </IconButton>
-            </React.Fragment>
-                }
-            />
+            >
+                <SnackbarContent style={{
+                backgroundColor: (!serverError) ? "#4caf50" :  "#f44336"
+                }}
+                  message={(!serverError) ? "Order processed successfully!" : "Server error, please try again!"}
+                />
+            </Snackbar>
         </React.Fragment>
     )
 }

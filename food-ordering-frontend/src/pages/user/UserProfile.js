@@ -7,12 +7,16 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { authStore } from "../../store/AuthStore";
-import { navigate } from "@reach/router";
 import {apiUrl} from "../../App";
 import HeroOverlay from "../../components/user/HeroOverlay";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ServerErrorMessage from "../../components/admin/ServerErrorMessage";
 import { Typography } from '@material-ui/core';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import Footer from "../../components/user/Footer";
+import Link from "@material-ui/core/Link";
+import { navigate, Link as RouterLink } from "@reach/router";
 
 const UserProfile = () => {
 
@@ -20,14 +24,24 @@ const UserProfile = () => {
     const classes = useStyles();
     const [loading, setLoading] = useState(false);
     const [serverError, setServerError] = useState(false);
+    const [openSnack, setOpenSnack] = React.useState(false);
 
-    const initialFields = {
+    const initialProfileFields = {
         firstName:"",
         lastName:"",
         address:""
     };
-    const [fields, setFields] = useState(initialFields);
-    const [fieldErrors, setFieldErrors] = useState(initialFields);
+    const [profileFields, setProfileFields] = useState(initialProfileFields);
+    const [profileFieldErrors, setProfileFieldErrors] = useState(initialProfileFields);
+
+    
+    const initialPasswordFields = {
+      password: "",
+      confirmPassword: ""
+    }
+
+    const [passwordFields, setPasswordFields] = useState(initialPasswordFields);
+    const [passwordFieldErrors, setPasswordFieldErrors] = useState(initialPasswordFields);
 
     useEffect(()=>{
 
@@ -44,50 +58,96 @@ const UserProfile = () => {
             }
             return response.json(); 
           }).then(json=>{
-              setFields(json)
+            setProfileFields(json)
           })
           .catch(err => {
 
           });
     },[])
-    
+
+    const handleCloseSnack = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+
+      setOpenSnack(false);
+    };
+
     const handleProfileChange = (event) => {
-        event.preventDefault();
-        setLoading(true);
-        fetch(`${apiUrl}/api/user/userinfo`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: authContext.state.userState.token
-          },
-          body: JSON.stringify({
-              firstName: fields.firstName,
-              lastName: fields.lastName,
-              address: fields.address
-          })
+      event.preventDefault();
+      setLoading(true);
+      fetch(`${apiUrl}/api/user/userinfo`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authContext.state.userState.token
+        },
+        body: JSON.stringify({
+            firstName: profileFields.firstName,
+            lastName: profileFields.lastName,
+            address: profileFields.address
         })
-        .then(response => {
-          if (!response.ok) {
-            throw response;
-          }
-          setLoading(false);
-          setFieldErrors(initialFields);
-          setServerError(false);
-          navigate("/restaurants");
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw response;
+        }
+        setLoading(false);
+        setProfileFieldErrors(initialProfileFields);
+        setServerError(false);
+        setOpenSnack(true);
+      })
+      .catch(err => {
+        setLoading(false);
+        if (err.text) {
+          err.text().then(errorMessage => {
+            const errObj = JSON.parse(errorMessage);
+            setProfileFieldErrors({ ...initialProfileFields, ...errObj });
+          });
+        } else {
+          setServerError(true);
+          setProfileFieldErrors(initialProfileFields);
+        }
+      });
+    };   
+    const handlePasswordChange = (event) => {
+      event.preventDefault();
+      setLoading(true);
+      fetch(`${apiUrl}/api/user/changepassword`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authContext.state.userState.token
+        },
+        body: JSON.stringify({
+            password: passwordFields.password,
+            confirmPassword: passwordFields.confirmPassword
         })
-        .catch(err => {
-          setLoading(false);
-          if (err.text) {
-            err.text().then(errorMessage => {
-              const errObj = JSON.parse(errorMessage);
-              setFieldErrors({ ...initialFields, ...errObj });
-            });
-          } else {
-            setServerError(true);
-            setFieldErrors(initialFields);
-          }
-        });
-      };   
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw response;
+        }
+        setLoading(false);
+        setPasswordFields(initialPasswordFields);
+        setPasswordFieldErrors(initialPasswordFields);
+        setServerError(false);
+        setOpenSnack(true);
+      })
+      .catch(err => {
+        setLoading(false);
+        if (err.text) {
+          err.text().then(errorMessage => {
+            const errObj = JSON.parse(errorMessage);
+            setPasswordFieldErrors({ ...initialPasswordFields, ...errObj });
+          });
+        } else {
+          setServerError(true);
+          setPasswordFieldErrors(initialPasswordFields);
+        }
+      });
+
+    }
     return (
         <React.Fragment>
           <CssBaseline />
@@ -126,11 +186,12 @@ const UserProfile = () => {
                                 id="firstName"
                                 label="First Name"
                                 required
-                                value={fields.firstName}
+                                value={profileFields.firstName}
                                 onChange={event => {
-                                    setFields({ ...fields, firstName: event.target.value });
+                                  setProfileFields({ ...profileFields, firstName: event.target.value });
                                 }}
-                                helperText={fieldErrors.firstName}
+                                helperText={profileFieldErrors.firstName}
+                                error={!!profileFieldErrors.firstName}
                                 />
                             </Grid>
                             <Grid item>
@@ -138,11 +199,12 @@ const UserProfile = () => {
                                 id="lastName"
                                 label="Last name"
                                 required
-                                value={fields.lastName}
+                                value={profileFields.lastName}
                                 onChange={event => {
-                                    setFields({ ...fields, lastName: event.target.value });
+                                  setProfileFields({ ...profileFields, lastName: event.target.value });
                                 }}
-                                helperText={fieldErrors.lastName}
+                                helperText={profileFieldErrors.lastName}
+                                error={!!profileFieldErrors.lastName}
                                 />
                             </Grid>
                         </Grid>
@@ -152,17 +214,17 @@ const UserProfile = () => {
                                 label="Address"
                                 required
                                 fullWidth
-                                value={fields.address}
+                                value={profileFields.address}
+                                error={!!profileFieldErrors.address}
                                 onChange={event => {
-                                    setFields({ ...fields, address: event.target.value });
+                                  setProfileFields({ ...profileFields, address: event.target.value });
                                 }}
-                                helperText={fieldErrors.address}
+                                helperText={profileFieldErrors.address}
                             />
                         </Grid>
-                        <Grid item xs={10}>
+                        <Grid item xs={10} align="center">
                         <Button
                             type="submit"
-                            fullWidth
                             variant="contained"
                             color="primary"
                             className={classes.submit}
@@ -173,8 +235,90 @@ const UserProfile = () => {
                         </Grid>
                     </Grid>
                 </form>
+                <br/>
+                <br/>
+                {/*PASSWORD*/}
+                <Typography variant="h5" gutterBottom>
+                  Change password
+                </Typography>
+                
+                <form validate="true" onSubmit={handlePasswordChange}>
+                    <Grid container
+                    direction="row"
+                    justify="center"
+                    alignItems="flex-start"
+                    spacing={3}
+                    >
+                        
+                        <Grid item xs={10}>
+                            <TextField
+                                id="password"
+                                label="New password"
+                                type="password"
+                                required
+                                fullWidth
+                                value={passwordFields.password}
+                                onChange={event => {
+                                    setPasswordFields({ ...passwordFields, password: event.target.value });
+                                }}
+                                helperText={passwordFieldErrors.password}
+                                error={!!passwordFieldErrors.password}
+                            />
+                        </Grid>
+                        <Grid item xs={10}>
+                            <TextField
+                                id="confirmPassword"
+                                label="Confirm new password"
+                                type="password"
+                                required
+                                fullWidth
+                                value={passwordFields.confirmPassword}
+                                onChange={event => {
+                                  setPasswordFields({ ...passwordFields, confirmPassword: event.target.value });
+                                }}
+                                helperText={passwordFieldErrors.confirmPassword}
+                                error={!!passwordFieldErrors.confirmPassword}
+                            />
+                        </Grid>
+                        <Grid item xs={10} align="center">
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                            disabled={loading}
+                            >
+                            Change Password
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </form>
+                <br/>
+                <Grid container>
+                  <Grid item>
+                    <Link component={RouterLink} to={`/restaurants/`} variant="body2">
+                      {"< Back to restaurants"}
+                    </Link>
+                  </Grid>
+                </Grid>
                 </Paper>
+                <Footer/>
             </Container>
+            <Snackbar
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+              open={openSnack}
+              autoHideDuration={6000}
+              onClose={handleCloseSnack}
+              >
+                <SnackbarContent style={{
+                  backgroundColor: (!serverError) ? "#4caf50" :  "#f44336"
+                  }}
+                  message={<span id="client-snackbar">Successfully changed!</span>}
+                />
+              </Snackbar>
         </React.Fragment>
       );
 } 
@@ -189,6 +333,9 @@ const useStyles = makeStyles(theme => ({
     },
     submit: {
         marginTop: theme.spacing(5)
+    },
+    successBar: {
+      backgroundColor: "#4caf50"
     }
   }));
 

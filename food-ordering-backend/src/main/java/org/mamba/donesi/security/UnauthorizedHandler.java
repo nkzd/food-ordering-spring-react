@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 
 @Component
-public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class UnauthorizedHandler implements AuthenticationEntryPoint {
 	@Override
 	public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 			AuthenticationException e) throws IOException, ServletException {

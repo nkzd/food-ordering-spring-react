@@ -41,20 +41,4 @@ public class AppUserService {
 			throw new IdException("User with this id doesn't exist");
 		return appUser;
 	}
-
-	public AppUser update(@Valid AppUser updateUser, String username) {
-		if (updateUser.getId().equals(getByUsername(username).getId())) {
-			try {
-				updateUser.setPassword(bCryptPasswordEncoder.encode(updateUser.getPassword()));
-				AppUser appUser = appUserRepository.save(updateUser);
-				updateUser.setConfirmPassword("");
-				return appUser;
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new AlreadyExistsException("Username " + updateUser.getUsername() + " already exists");
-			}
-		} else {
-			throw new NotInAccountException("Details not found in your account");
-		}
-	}
 }
