@@ -1,8 +1,22 @@
 # Spring and React food ordering app
 
-    Simple food ordering app built with Spring boot and React with both restaurant and user dashboard.
+Food ordering app built with Spring boot and React with both restaurant and user dashboard. Two roles:
 
-## Demo
+Restaurant Admin:
+
+    register
+    login
+    add food to restaurant menu
+
+
+User:
+
+    register
+    login
+    create basket for order
+    create order - send email to restaurant/restaurants
+
+## Heroku Demo
 [Homepage](https://food-ordering-demo.herokuapp.com)     
 [Admin panel](https://food-ordering-demo.herokuapp.com/admin)  
 
